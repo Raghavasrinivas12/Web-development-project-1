@@ -1,15 +1,17 @@
-const express=require("express")
 require('dotenv').config
+const express=require("express")
 const router=express.Router()
 const jwt=require("jsonwebtoken");
 const { userCheck } = require("../zod");
 const bcrypt = require('bcrypt');
+const { User } = require("../db/db");
+const { JWT_SECRET } = require('../config');
+
 
 //sign up route
 router.post('/signup', async (req, res) => {
   try {
     const body = req.body;
-    
     // Validate inputs using Zod
     const { success, error } = userCheck.safeParse(body);
     if (!success) {
@@ -22,7 +24,7 @@ router.post('/signup', async (req, res) => {
     const { username, email, password, phone, role } = body;
 
     // Check if user already exists
-    const existing = await User.findOne({ email });
+    const existing = await User.find({ email });
     if (existing) {
       return res.status(409).json({ msg: "User already exists" }); 
     }
@@ -39,10 +41,10 @@ router.post('/signup', async (req, res) => {
       phone,
       role
     });
-
     // Generate JWT Token
     const userid = user._id;
-    const token = jwt.sign({ userid }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userid },JWT_SECRET );
+    
 
     return res.status(201).json({
       msg: "Successfully signed up",
@@ -75,7 +77,7 @@ router.post('/signin', async (req, res) => {
 
     // Generate Token
     const userid = user._id;
-    const token = jwt.sign({ userid }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userid }, );
 
     return res.json({
       msg: "User signed in successfully",
