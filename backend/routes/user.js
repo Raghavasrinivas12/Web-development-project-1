@@ -6,7 +6,7 @@ const { userCheck } = require("../zod");
 const bcrypt = require('bcrypt');
 const { User } = require("../db/db");
 const { JWT_SECRET } = require('../config');
-const authMiddleware = require('../middleware/authmiddle');
+const authMiddleware = require('../middleware/authMiddleware');
 
 
 //sign up route
