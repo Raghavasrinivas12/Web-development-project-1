@@ -3,17 +3,19 @@ require('dotenv').config;
 
 mongoose.connect('mongodb+srv://E-commerce:ecommerceproject1@cluster1.s9yuyxb.mongodb.net/');//connection
 
-//User Schema
+// USER SCHEMA
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, trim: true }, 
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   passwordHash: { type: String, required: true }, 
-  phone: { type: Number, trim: true },
-  role: { type: String, enum: ['buyer', 'seller', 'admin'], default: 'buyer' }
+  phone: { type: String, trim: true },
+  role: {type: String,enum: ['customer', 'vendor', 'superadmin'], default: 'customer' 
+  },
+  isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
 
-//Store Schema
+// STORE SCHEMA
 const StoreSchema = new mongoose.Schema({
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +28,7 @@ const StoreSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-//PRODUCT SCHEMA
+// PRODUCT SCHEMA
 const ProductSchema = new mongoose.Schema({
   storeId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -37,12 +39,12 @@ const ProductSchema = new mongoose.Schema({
   description: { type: String },
   price: { type: Number, required: true, min: 0 },
   stockQuantity: { type: Number, required: true, default: 0, min: 0 },
-  images: [{ type: String }]
+  images: [{ type: String }],
+  variants: [{ type: String }] 
 }, { timestamps: true });
 
 
-//ORDER SUB-SCHEMA (Added)
-// This must be defined BEFORE OrderSchema so it can be nested inside it.
+// SUB ORDER SCHEMA
 const OrderItemSchema = new mongoose.Schema({
   productId: { 
     type: mongoose.Schema.Types.ObjectId, 
@@ -55,7 +57,7 @@ const OrderItemSchema = new mongoose.Schema({
 });
 
 
-//ORDER SCHEMA
+// ORDER SCHEMA
 const OrderSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
@@ -75,13 +77,13 @@ const OrderSchema = new mongoose.Schema({
     state: { type: String, required: true },
     zipCode: { type: String, required: true },
     country: { type: String, required: true }
-  }
+  },
+  stripePaymentIntentId: { type: String } //payment webhooks
 }, { timestamps: true });
 
+const User = mongoose.model('User', UserSchema);
+const Store = mongoose.model('Store', StoreSchema);
+const Product = mongoose.model('Product', ProductSchema);
+const Order = mongoose.model('Order', OrderSchema);
 
-const User=mongoose.model('User',UserSchema);
-const Store=mongoose.model('Store',StoreSchema);
-const Product=mongoose.model('Product',ProductSchema);
-const Order=mongoose.model('Order',OrderSchema);
-
-module.exports={User,Store,Product,Order}
+module.exports = { User, Store, Product, Order };
