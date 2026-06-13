@@ -51,7 +51,7 @@ router.post('/signup', async (req, res) => {
     };
 
    
-    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign(tokenPayload,JWT_SECRET, { expiresIn: '1d' }); // LATER WE WILL GET THROUGH ENV 
 
     return res.status(201).json({
       msg: "Successfully signed up",
@@ -85,7 +85,7 @@ router.post('/signin', async (req, res) => {
     // Generate Token
 const tokenPayload = {userid: user._id,role: user.role};
 
-    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1d' });
 
 
     return res.json({
