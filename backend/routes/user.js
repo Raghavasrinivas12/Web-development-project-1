@@ -1,12 +1,11 @@
-require('dotenv').config
+require('dotenv').config()
 const express=require("express")
 const router=express.Router()
 const jwt=require("jsonwebtoken");
 const { userCheck } = require("../zod");
 const bcrypt = require('bcrypt');
 const { User } = require("../db/db");
-const { JWT_SECRET } = require('../config');
-
+const JWT_SECRET = process.env.JWT_SECRET || "untileasy1";
 
 //sign up route
 router.post('/signup', async (req, res) => {
@@ -24,7 +23,7 @@ router.post('/signup', async (req, res) => {
     const { username, email, password, phone, role } = body;
 
     // Check if user already exists
-    const existing = await User.find({ email });
+    const existing = await User.findOne({ email });
     if (existing) {
       return res.status(409).json({ msg: "User already exists" }); 
     }
@@ -77,7 +76,7 @@ router.post('/signin', async (req, res) => {
 
     // Generate Token
     const userid = user._id;
-    const token = jwt.sign({ userid }, );
+    const token = jwt.sign({ userid }, JWT_SECRET);
 
     return res.json({
       msg: "User signed in successfully",
