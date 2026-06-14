@@ -5,7 +5,6 @@
 const restrictTo = (...allowedRoles) => {
   return (req, res, next) => {
     
-    // This must be placed AFTER authMiddleware in your route chain!
     if (!req.user) {
       return res.status(401).json({ msg: "Authentication required before role verification." });
     }

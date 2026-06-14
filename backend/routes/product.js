@@ -68,11 +68,11 @@ router.get('/', async (req, res) => {
 
 
 // GET PRODUCT SPECIALLY FOR PER STORE
-router.get('/store/:storeId', async (req, res) => {
+router.get('/:productId', async (req, res) => {
   try {
-    const { storeId } = req.params;
+    const { productId } = req.params;
 
-    const products = await Product.find({ storeId }).sort({ createdAt: -1 });
+    const products = await Product.find({ productId }).sort({ createdAt: -1 });
     
     return res.json({
       count: products.length,
