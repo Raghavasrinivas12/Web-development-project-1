@@ -2,7 +2,7 @@ const mongoose=require('mongoose');
 require('dotenv').config();
 
 mongoose.connect(
-  'mongodb+srv://E-commerce:ecommerceproject1@cluster1.s9yuyxb.mongodb.net/'
+  `${process.env.MONGODB_URL}`
 )
 .then(() => {
   console.log('Connected to MongoDB');

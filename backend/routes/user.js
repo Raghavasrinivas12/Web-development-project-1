@@ -5,7 +5,6 @@ const jwt=require("jsonwebtoken");
 const { userCheck } = require("../zod");
 const bcrypt = require('bcrypt');
 const { User } = require("../db/db");
-const { JWT_SECRET } = require('../config');
 const authMiddleware = require('../middleware/authMiddleware');
 
 
@@ -50,7 +49,7 @@ router.post('/signup', async (req, res) => {
     };
 
    
-    const token = jwt.sign(tokenPayload,JWT_SECRET, { expiresIn: '1d' }); // LATER WE WILL GET THROUGH ENV 
+    const token = jwt.sign(tokenPayload,process.env.JWT_SECRET, { expiresIn: '1d' }); // LATER WE WILL GET THROUGH ENV 
 
     return res.status(201).json({
       msg: "Successfully signed up",
@@ -83,7 +82,7 @@ router.post('/signin', async (req, res) => {
 
     const tokenPayload = {userid: user._id,role: user.role};
 
-    const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     return res.json({
       msg: "User signed in successfully",
