@@ -8,6 +8,7 @@ const validateBody = (schema) => {
 
     if (!result.success) {
       
+      // Zod errors for frontend developers to read easily
       const formattedErrors = result.error.errors.map(err => ({
         field: err.path.join('.'),
         message: err.message

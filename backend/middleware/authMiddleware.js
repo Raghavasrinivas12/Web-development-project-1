@@ -6,6 +6,7 @@ const authMiddleware = (req, res, next) => {
     
     const authHeader = req.headers.authorization;
 
+    // Make sure it follows "Bearer token" pattern
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ 
         msg: "Access Denied: No authentication token found. Please log in." 
@@ -15,7 +16,8 @@ const authMiddleware = (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     const decodedPayload = jwt.verify(token, JWT_SECRET);
-
+    
+    // Attach the decoded data user payload to req.user
     req.user = decodedPayload;
 
     next();

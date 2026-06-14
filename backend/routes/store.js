@@ -8,15 +8,17 @@ const router=express.Router()
 
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const ownerId = req.user.userid; // Extracted from verified JWT payload context
-    const userRole = req.user.role;   // Extracted from verified JWT payload context
 
-    // Rule: Guard endpoint against non-vendor roles
+    // Extracted from verified JWT payload 
+    const ownerId = req.user.userid; 
+    const userRole = req.user.role;  
+
+    // Guard endpoint against non-vendor roles
     if (userRole !== 'vendor' && userRole !== 'superadmin') {
       return res.status(403).json({ msg: "Access denied: Only vendors can register a storefront." });
     }
 
-    // Parse data layout using your inherited Zod validator
+    
     const validationResult = storeCheck.safeParse({
       ownerId,
       storename: req.body.storename,
@@ -31,13 +33,13 @@ router.post('/', authMiddleware, async (req, res) => {
       });
     }
 
-    
+    // Prevent duplicate store naming
     const existingStore = await Store.findOne({ storeName: req.body.storename });
     if (existingStore) {
       return res.status(409).json({ msg: "Store name is already occupied by another merchant." });
     }
 
-    // Instantiate document in MongoDB Atlas
+    // Instantiate store 
     const newStore = await Store.create({
       ownerId,
       storeName: req.body.storename,
@@ -55,6 +57,7 @@ router.post('/', authMiddleware, async (req, res) => {
     return res.status(500).json({ msg: "Internal server error" });
   }
 });
+
 
 // GET ALL FETCH ALL STORES
 router.get('/', async (req, res) => {
@@ -111,7 +114,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
       return res.status(404).json({ msg: "Storefront not found." });
     }
 
-    
+    // is the vendor calling this update actual creator of the store?    
     if (store.ownerId.toString() !== currentUserId && req.user.role !== 'superadmin') {
       return res.status(403).json({ msg: "Unauthorized: You do not own this storefront." });
     }
@@ -128,7 +131,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
       return res.status(400).json({ msg: "Invalid updates provided", errors: validationResult.error.errors });
     }
 
-    // 4. Check if the updated storename conflicts with another existing store
+    //Check if the updated storename conflicts with another existing store
     if (storename && storename !== store.storeName) {
       const nameConflict = await Store.findOne({ storeName: storename });
       if (nameConflict) {
