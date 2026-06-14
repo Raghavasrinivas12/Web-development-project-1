@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../config');
 
 const authMiddleware = (req, res, next) => {
   try {
@@ -15,7 +14,7 @@ const authMiddleware = (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    const decodedPayload = jwt.verify(token, JWT_SECRET);
+    const decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
     
     // Attach the decoded data user payload to req.user
     req.user = decodedPayload;
