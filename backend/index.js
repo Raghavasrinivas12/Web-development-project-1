@@ -14,6 +14,7 @@ const orderRouter=require('./routes/order')
 
 app.use('/api/user',userRouter)
 app.use('/api/stores',storeRouter)
+app.use('/api/orders',orderRouter)
 
 const PORT = process.env.PORT || 5000;
 
