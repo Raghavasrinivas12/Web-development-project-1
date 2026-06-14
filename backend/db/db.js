@@ -1,7 +1,15 @@
 const mongoose=require('mongoose');
-require('dotenv').config;
+require('dotenv').config();
 
-mongoose.connect('mongodb+srv://E-commerce:ecommerceproject1@cluster1.s9yuyxb.mongodb.net/');//connection
+mongoose.connect(
+  'mongodb+srv://E-commerce:ecommerceproject1@cluster1.s9yuyxb.mongodb.net/'
+)
+.then(() => {
+  console.log('Connected to MongoDB');
+})
+.catch((error) => {
+  console.error('Error connecting to MongoDB:', error.message);
+});
 
 // USER SCHEMA
 const UserSchema = new mongoose.Schema({
