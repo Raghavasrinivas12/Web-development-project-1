@@ -1,13 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function Register() {
+export default function Signin() {
   const [form, setForm] = useState({
-    username: "",
     email: "",
     password: "",
-    phone: "",
-    role: "customer",
   });
 
   const handleChange = (e) => {
@@ -22,30 +19,28 @@ export default function Register() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/user/signup",
+        "http://localhost:5000/api/user/login",
         form
       );
 
-      alert("Registration Successful!");
       console.log(res.data);
+
+      localStorage.setItem("token", res.data.token);
+
+      alert("Login Successful");
     } catch (err) {
       console.error(err);
-      alert("Registration Failed");
+      alert("Login Failed");
     }
   };
 
   return (
     <div>
-      <h1>Register</h1>
+      <h1>Sign In</h1>
 
       <form onSubmit={handleSubmit}>
         <input
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-        />
-
-        <input
+          type="email"
           name="email"
           placeholder="Email"
           onChange={handleChange}
@@ -58,19 +53,8 @@ export default function Register() {
           onChange={handleChange}
         />
 
-        <input
-          name="phone"
-          placeholder="Phone"
-          onChange={handleChange}
-        />
-
-        <select name="role" onChange={handleChange}>
-          <option value="customer">Customer</option>
-          <option value="vendor">Vendor</option>
-        </select>
-
         <button type="submit">
-          Register
+          Login
         </button>
       </form>
     </div>
