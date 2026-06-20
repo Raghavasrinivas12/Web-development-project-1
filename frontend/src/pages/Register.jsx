@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-function Register() {
+export default function Register() {
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -26,55 +26,80 @@ function Register() {
         form
       );
 
-      alert("Signup successful!");
+      alert("Registration Successful!");
       console.log(res.data);
     } catch (err) {
       console.error(err);
-      alert("Signup failed");
+      alert("Registration Failed");
     }
   };
 
   return (
-    <div>
-      <h1>Create Account</h1>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
+      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8">
+        <h1 className="text-3xl font-bold text-white mb-2">
+          Create Account
+        </h1>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-        />
+        <p className="text-slate-400 mb-6">
+          Register as a customer or vendor
+        </p>
 
-        <input
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            className="w-full p-3 rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-blue-500"
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-        />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full p-3 rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-blue-500"
+          />
 
-        <input
-          name="phone"
-          placeholder="Phone"
-          onChange={handleChange}
-        />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full p-3 rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-blue-500"
+          />
 
-        <select name="role" onChange={handleChange}>
-          <option value="customer">Customer</option>
-          <option value="vendor">Vendor</option>
-        </select>
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone Number"
+            value={form.phone}
+            onChange={handleChange}
+            className="w-full p-3 rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-blue-500"
+          />
 
-        <button type="submit">
-          Sign Up
-        </button>
-      </form>
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className="w-full p-3 rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-blue-500"
+          >
+            <option value="customer">Customer</option>
+            <option value="vendor">Vendor</option>
+          </select>
+
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
+          >
+            Create Account
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
-
-export default Register;
