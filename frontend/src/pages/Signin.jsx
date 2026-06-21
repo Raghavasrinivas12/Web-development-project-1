@@ -76,7 +76,7 @@ export default function Signin() {
           <motion.div
             className="absolute -bottom-32 -right-16 w-96 h-96 rounded-full opacity-[0.02] blur-3xl"
             style={{
-              background: "radial-gradient(circle, #2563EB, transparent 70%)",
+              background: "radial-gradient(circle, #3B82F6, transparent 70%)",
             }}
             animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
             transition={{
@@ -91,7 +91,7 @@ export default function Signin() {
           className="absolute left-1/2 top-0 w-px h-full z-10 hidden md:block"
           style={{
             background:
-              "linear-gradient(to bottom, transparent 5%, rgba(37,99,235,0.4) 30%, rgba(37,99,235,0.6) 50%, rgba(37,99,235,0.4) 70%, transparent 95%)",
+              "linear-gradient(to bottom, transparent 5%, rgba(59,130,246,0.4) 30%, rgba(59,130,246,0.6) 50%, rgba(59,130,246,0.4) 70%, transparent 95%)",
             transform: "translateX(-50%) skewY(15deg)",
             transformOrigin: "top center",
           }}
@@ -106,7 +106,7 @@ export default function Signin() {
           >
             <motion.div
               variants={brandingItem}
-              className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20 mb-6"
+              className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 mb-6"
             >
               <svg
                 className="w-8 h-8 text-white"
@@ -139,7 +139,7 @@ export default function Signin() {
 
             <motion.div
               variants={brandingItem}
-              className="w-12 h-0.5 bg-blue-600/40 rounded-full mt-6"
+              className="w-12 h-0.5 bg-blue-500/40 rounded-full mt-6"
             />
 
             <motion.p
@@ -219,7 +219,7 @@ export default function Signin() {
                     onChange={(e) => setRemember(e.target.checked)}
                     className="peer sr-only"
                   />
-                  <span className="w-4 h-4 rounded border border-slate-600 bg-slate-800/50 flex items-center justify-center peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all duration-200 group-hover:border-slate-500 shrink-0">
+                  <span className="w-4 h-4 rounded border border-slate-600 bg-slate-800/50 flex items-center justify-center peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-all duration-200 group-hover:border-slate-500 shrink-0">
                     <svg
                       className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200"
                       fill="none"
@@ -251,10 +251,10 @@ export default function Signin() {
                   type="submit"
                   whileHover={{
                     scale: 1.01,
-                    boxShadow: "0 8px 30px rgba(37, 99, 235, 0.25)",
+                    boxShadow: "0 8px 30px rgba(59, 130, 246, 0.25)",
                   }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl shadow-lg shadow-black/30 cursor-pointer transition-colors duration-200"
+                  className="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-black/30 cursor-pointer transition-colors duration-200"
                 >
                   Sign In
                 </motion.button>

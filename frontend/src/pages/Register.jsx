@@ -81,7 +81,7 @@ export default function Register() {
           <motion.div
             className="absolute -bottom-32 -left-16 w-96 h-96 rounded-full opacity-[0.02] blur-3xl"
             style={{
-              background: "radial-gradient(circle, #2563EB, transparent 70%)",
+              background: "radial-gradient(circle, #3B82F6, transparent 70%)",
             }}
             animate={{ x: [0, 30, 0], y: [0, 20, 0] }}
             transition={{
@@ -96,7 +96,7 @@ export default function Register() {
           className="absolute left-1/2 top-0 w-px h-full z-10 hidden md:block"
           style={{
             background:
-              "linear-gradient(to bottom, transparent 5%, rgba(37,99,235,0.4) 30%, rgba(37,99,235,0.6) 50%, rgba(37,99,235,0.4) 70%, transparent 95%)",
+              "linear-gradient(to bottom, transparent 5%, rgba(59,130,246,0.4) 30%, rgba(59,130,246,0.6) 50%, rgba(59,130,246,0.4) 70%, transparent 95%)",
             transform: "translateX(-50%) skewY(-15deg)",
             transformOrigin: "top center",
           }}
@@ -196,7 +196,7 @@ export default function Register() {
                       }
                       className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                         form.role === role
-                          ? "bg-blue-600 text-white shadow-lg shadow-black/30"
+                          ? "bg-blue-500 text-white shadow-lg shadow-black/30"
                           : "bg-slate-800/50 text-slate-400 border border-slate-700 hover:text-slate-200 hover:border-slate-600"
                       }`}
                     >
@@ -211,10 +211,10 @@ export default function Register() {
                   type="submit"
                   whileHover={{
                     scale: 1.01,
-                    boxShadow: "0 8px 30px rgba(37, 99, 235, 0.25)",
+                    boxShadow: "0 8px 30px rgba(59, 130, 246, 0.25)",
                   }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl shadow-lg shadow-black/30 cursor-pointer transition-colors duration-200"
+                  className="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-black/30 cursor-pointer transition-colors duration-200"
                 >
                   Create Account
                 </motion.button>
@@ -245,7 +245,7 @@ export default function Register() {
           >
             <motion.div
               variants={brandingItem}
-              className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20 mb-6"
+              className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 mb-6"
             >
               <svg
                 className="w-8 h-8 text-white"
@@ -278,7 +278,7 @@ export default function Register() {
 
             <motion.div
               variants={brandingItem}
-              className="w-12 h-0.5 bg-blue-600/40 rounded-full mt-6"
+              className="w-12 h-0.5 bg-blue-500/40 rounded-full mt-6"
             />
 
             <motion.p
