@@ -41,7 +41,7 @@ export default function Register() {
           Create Account
         </h1>
 
-        <p className="text-slate-400 mb-6">
+        <p className="text-white mb-6">
           Register as a customer or vendor
         </p>
 
