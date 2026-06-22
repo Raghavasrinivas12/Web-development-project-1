@@ -7,18 +7,18 @@ import {
 
 const WhyShopHub = () => {
   return (
-    <section className="bg-slate-950 py-16 px-6">
-      <h2 className="text-4xl font-bold text-white text-center mb-12">
+    <section className="bg-slate-950 py-14 px-6">
+      <h2 className="text-3xl font-bold text-white text-center mb-10">
         Why ShopHub?
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="bg-slate-900 p-8 rounded-xl text-center">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-slate-900 p-6 rounded-xl text-center">
           <Store
-            size={50}
-            className="mx-auto text-blue-500 mb-4"
+            size={44}
+            className="mx-auto text-blue-500 mb-3"
           />
-          <h3 className="text-white font-semibold text-xl">
+          <h3 className="text-white font-semibold text-lg">
             Multiple Stores
           </h3>
           <p className="text-gray-400 mt-2">
@@ -26,12 +26,12 @@ const WhyShopHub = () => {
           </p>
         </div>
 
-        <div className="bg-slate-900 p-8 rounded-xl text-center">
+        <div className="bg-slate-900 p-6 rounded-xl text-center">
           <ShieldCheck
-            size={50}
-            className="mx-auto text-blue-500 mb-4"
+            size={44}
+            className="mx-auto text-blue-500 mb-3"
           />
-          <h3 className="text-white font-semibold text-xl">
+          <h3 className="text-white font-semibold text-lg">
             Secure Shopping
           </h3>
           <p className="text-gray-400 mt-2">
@@ -39,12 +39,12 @@ const WhyShopHub = () => {
           </p>
         </div>
 
-        <div className="bg-slate-900 p-8 rounded-xl text-center">
+        <div className="bg-slate-900 p-6 rounded-xl text-center">
           <Truck
-            size={50}
-            className="mx-auto text-blue-500 mb-4"
+            size={44}
+            className="mx-auto text-blue-500 mb-3"
           />
-          <h3 className="text-white font-semibold text-xl">
+          <h3 className="text-white font-semibold text-lg">
             Fast Delivery
           </h3>
           <p className="text-gray-400 mt-2">
@@ -52,12 +52,12 @@ const WhyShopHub = () => {
           </p>
         </div>
 
-        <div className="bg-slate-900 p-8 rounded-xl text-center">
+        <div className="bg-slate-900 p-6 rounded-xl text-center">
           <CreditCard
-            size={50}
-            className="mx-auto text-blue-500 mb-4"
+            size={44}
+            className="mx-auto text-blue-500 mb-3"
           />
-          <h3 className="text-white font-semibold text-xl">
+          <h3 className="text-white font-semibold text-lg">
             Easy Payments
           </h3>
           <p className="text-gray-400 mt-2">

@@ -23,12 +23,12 @@ const products = [
 
 const TrendingProducts = () => {
   return (
-    <section className="bg-slate-950 py-16 px-6">
-      <h2 className="text-4xl font-bold text-white text-center mb-10">
+    <section className="bg-slate-950 py-14 px-6">
+      <h2 className="text-3xl font-bold text-white text-center mb-8">
         Trending Products
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map((product, index) => (
           <div
             key={index}
@@ -37,11 +37,11 @@ const TrendingProducts = () => {
             <img
               src={product.image}
               alt={product.name}
-              className="h-56 w-full object-cover"
+              className="h-48 w-full object-cover"
             />
 
-            <div className="p-4">
-              <h3 className="text-white text-lg font-semibold">
+            <div className="p-3">
+              <h3 className="text-white text-base font-semibold">
                 {product.name}
               </h3>
 
@@ -49,7 +49,7 @@ const TrendingProducts = () => {
                 {product.price}
               </p>
 
-              <button className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg">
+              <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg">
                 Add to Cart
               </button>
             </div>

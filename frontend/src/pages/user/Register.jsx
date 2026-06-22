@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const brandingVariants = {
   hidden: { opacity: 0 },
@@ -30,6 +31,8 @@ const formItem = {
 };
 
 export default function Register() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -49,8 +52,8 @@ export default function Register() {
         "http://localhost:5000/api/user/signup",
         form
       );
-      alert("Registration Successful!");
-      console.log(res.data);
+      login(res.data.user, res.data.token);
+      navigate("/");
     } catch (err) {
       console.error(err);
       alert("Registration Failed");
@@ -63,7 +66,7 @@ export default function Register() {
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative w-full max-w-5xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col md:flex-row md:h-[640px]"
+        className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col md:flex-row md:h-[580px]"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
@@ -72,11 +75,7 @@ export default function Register() {
               background: "radial-gradient(circle, #3B82F6, transparent 70%)",
             }}
             animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
             className="absolute -bottom-32 -left-16 w-96 h-96 rounded-full opacity-[0.02] blur-3xl"
@@ -84,11 +83,7 @@ export default function Register() {
               background: "radial-gradient(circle, #3B82F6, transparent 70%)",
             }}
             animate={{ x: [0, 30, 0], y: [0, 20, 0] }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
 
@@ -102,7 +97,7 @@ export default function Register() {
           }}
         />
 
-        <div className="relative w-full md:w-1/2 min-h-[400px] md:min-h-full flex flex-col justify-center p-10 md:p-14 order-2 md:order-1">
+        <div className="relative w-full md:w-1/2 min-h-[400px] md:min-h-full flex flex-col justify-center p-8 md:p-12 order-2 md:order-1">
           <motion.div
             variants={formVariants}
             initial="hidden"
@@ -110,19 +105,19 @@ export default function Register() {
           >
             <motion.h2
               variants={formItem}
-              className="text-2xl font-bold text-white tracking-tight"
+              className="text-xl font-bold text-white tracking-tight"
             >
               Create your account
             </motion.h2>
             <motion.p
               variants={formItem}
-              className="text-slate-400 mt-1 mb-8"
+              className="text-slate-400 mt-1 mb-6"
             >
               Start building your marketplace
             </motion.p>
 
             <form onSubmit={handleSubmit}>
-              <motion.div variants={formItem} className="mb-4">
+              <motion.div variants={formItem} className="mb-3">
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Username
                 </label>
@@ -137,7 +132,7 @@ export default function Register() {
                 />
               </motion.div>
 
-              <motion.div variants={formItem} className="mb-4">
+              <motion.div variants={formItem} className="mb-3">
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Email address
                 </label>
@@ -152,7 +147,7 @@ export default function Register() {
                 />
               </motion.div>
 
-              <motion.div variants={formItem} className="mb-4">
+              <motion.div variants={formItem} className="mb-3">
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Password
                 </label>
@@ -167,7 +162,7 @@ export default function Register() {
                 />
               </motion.div>
 
-              <motion.div variants={formItem} className="mb-4">
+              <motion.div variants={formItem} className="mb-3">
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   Phone number
                 </label>
@@ -182,7 +177,7 @@ export default function Register() {
                 />
               </motion.div>
 
-              <motion.div variants={formItem} className="mb-6">
+              <motion.div variants={formItem} className="mb-5">
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">
                   I want to join as
                 </label>
@@ -223,11 +218,11 @@ export default function Register() {
 
             <motion.p
               variants={formItem}
-              className="text-center text-slate-400 mt-6 text-sm"
+              className="text-center text-slate-400 mt-5 text-sm"
             >
               Already have an account?{" "}
               <Link
-                to="/signin"
+                to="/login"
                 className="text-blue-500 hover:text-blue-400 font-medium transition-colors duration-200"
               >
                 Sign In
@@ -236,7 +231,7 @@ export default function Register() {
           </motion.div>
         </div>
 
-        <div className="relative w-full md:w-1/2 min-h-[280px] md:min-h-full flex flex-col items-center justify-center p-10 md:p-14 text-center order-1 md:order-2">
+        <div className="relative w-full md:w-1/2 min-h-[280px] md:min-h-full flex flex-col items-center justify-center p-8 md:p-12 text-center order-1 md:order-2">
           <motion.div
             variants={brandingVariants}
             initial="hidden"
@@ -245,10 +240,10 @@ export default function Register() {
           >
             <motion.div
               variants={brandingItem}
-              className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 mb-6"
+              className="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 mb-5"
             >
               <svg
-                className="w-8 h-8 text-white"
+                className="w-7 h-7 text-white"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -264,7 +259,7 @@ export default function Register() {
 
             <motion.h1
               variants={brandingItem}
-              className="text-4xl font-bold text-white tracking-tight"
+              className="text-3xl font-bold text-white tracking-tight"
             >
               Shophub
             </motion.h1>
@@ -278,7 +273,7 @@ export default function Register() {
 
             <motion.div
               variants={brandingItem}
-              className="w-12 h-0.5 bg-blue-500/40 rounded-full mt-6"
+              className="w-12 h-0.5 bg-blue-500/40 rounded-full mt-5"
             />
 
             <motion.p
@@ -289,7 +284,7 @@ export default function Register() {
                 delay: 0.9,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="text-slate-300 text-base mt-6 max-w-xs leading-relaxed"
+              className="text-slate-300 text-base mt-5 max-w-xs leading-relaxed"
             >
               Join thousands of creators building the next generation of
               marketplaces.

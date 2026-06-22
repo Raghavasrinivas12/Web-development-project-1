@@ -2,7 +2,7 @@ require('dotenv').config();
 const express=require("express")
 const router=express.Router()
 const jwt=require("jsonwebtoken");
-const { userCheck } = require("../zod");
+const { userCheck, profileUpdateCheck } = require("../zod");
 const bcrypt = require('bcrypt');
 const { User } = require("../db/db");
 const authMiddleware = require('../middleware/authMiddleware');
@@ -51,9 +51,19 @@ router.post('/signup', async (req, res) => {
    
     const token = jwt.sign(tokenPayload,process.env.JWT_SECRET, { expiresIn: '1d' }); // LATER WE WILL GET THROUGH ENV 
 
+    const userData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      profilePic: user.profilePic || ''
+    };
+
     return res.status(201).json({
       msg: "Successfully signed up",
-      token
+      token,
+      user: userData
     });
 
   } catch (err) {
@@ -84,9 +94,19 @@ router.post('/signin', async (req, res) => {
 
     const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
+    const userData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      profilePic: user.profilePic || ''
+    };
+
     return res.json({
       msg: "User signed in successfully",
-      token
+      token,
+      user: userData
     });
 
   } catch (err) {
@@ -114,6 +134,75 @@ router.delete('/delete-account', authMiddleware, async (req, res) => {
 
   } catch (err) {
     console.error("Delete Account Error:", err);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+// GET CURRENT USER PROFILE
+router.get('/profile', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userid).select('-passwordHash');
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const userData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      profilePic: user.profilePic || ''
+    };
+
+    return res.json({ user: userData });
+  } catch (err) {
+    console.error("Profile Error:", err);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+// UPDATE USER PROFILE
+router.put('/profile', authMiddleware, async (req, res) => {
+  try {
+    const { success, error } = profileUpdateCheck.safeParse(req.body);
+    if (!success) {
+      return res.status(400).json({
+        msg: "Incorrect inputs",
+        errors: error.errors
+      });
+    }
+
+    const updates = {};
+    if (req.body.username) updates.username = req.body.username;
+    if (req.body.phone !== undefined) updates.phone = req.body.phone;
+    if (req.body.profilePic !== undefined) updates.profilePic = req.body.profilePic;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.userid,
+      updates,
+      { new: true }
+    ).select('-passwordHash');
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const userData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      profilePic: user.profilePic || ''
+    };
+
+    return res.json({
+      msg: "Profile updated successfully",
+      user: userData
+    });
+  } catch (err) {
+    console.error("Profile Update Error:", err);
     return res.status(500).json({ msg: "Internal server error" });
   }
 });

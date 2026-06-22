@@ -19,12 +19,12 @@ const categories = [
 
 const FeaturedCategories = () => {
   return (
-    <section className="bg-slate-950 py-16 px-6">
-      <h2 className="text-4xl font-bold text-white text-center mb-10">
+    <section className="bg-slate-950 py-14 px-6">
+      <h2 className="text-3xl font-bold text-white text-center mb-8">
         Featured Categories
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {categories.map((category, index) => (
           <div
             key={index}
@@ -33,11 +33,11 @@ const FeaturedCategories = () => {
             <img
               src={category.image}
               alt={category.name}
-              className="h-56 w-full object-cover"
+              className="h-48 w-full object-cover"
             />
 
-            <div className="p-4">
-              <h3 className="text-white text-xl font-semibold text-center">
+            <div className="p-3">
+              <h3 className="text-white text-lg font-semibold text-center">
                 {category.name}
               </h3>
             </div>

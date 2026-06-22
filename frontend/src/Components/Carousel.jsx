@@ -34,7 +34,7 @@ const Carousel = () => {
       pagination={{ clickable: true }}
       navigation
       loop={true}
-      className="h-[500px]"
+      className="h-[450px]"
     >
       {banners.map((banner, index) => (
         <SwiperSlide key={index}>
@@ -44,16 +44,16 @@ const Carousel = () => {
               backgroundImage: `url(${banner.image})`,
             }}
           >
-            <div className="bg-black/60 p-8 rounded-xl text-center">
-              <h1 className="text-5xl font-bold text-white mb-4">
+            <div className="bg-black/60 p-6 rounded-xl text-center">
+              <h1 className="text-4xl font-bold text-white mb-3">
                 {banner.title}
               </h1>
 
-              <p className="text-xl text-gray-200 mb-6">
+              <p className="text-lg text-gray-200 mb-5">
                 {banner.subtitle}
               </p>
 
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg">
                 Shop Now
               </button>
             </div>
