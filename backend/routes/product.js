@@ -12,7 +12,7 @@ const { validateBody } = require('../middleware/validateMiddleware');
 // ADD NEW PRODUCT (VENDOR ONLY)
 router.post('/', authMiddleware, restrictTo('vendor'), validateBody(productCheck), async (req, res) => {
   try {
-    const { storeId, title, description, price, stockQuantity, images, variants } = req.body;
+    const { storeId, title, description, price, stockQuantity, category, images, variants } = req.body;
     const currentUserId = req.user.userid; 
 
    // verify vendors actually owns
@@ -32,6 +32,7 @@ router.post('/', authMiddleware, restrictTo('vendor'), validateBody(productCheck
       description,
       price,
       stockQuantity,
+      category,
       images,
       variants 
     });
@@ -51,8 +52,12 @@ router.post('/', authMiddleware, restrictTo('vendor'), validateBody(productCheck
 // FETCH ALL PRODUCTS
 router.get('/', async (req, res) => {
   try {
+    const filter = {};
+    if (req.query.category) {
+      filter.category = new RegExp(req.query.category, 'i');
+    }
 
-    const products = await Product.find()
+    const products = await Product.find(filter)
       .populate('storeId', 'storeName logoUrl')
       .sort({ createdAt: -1 });
 

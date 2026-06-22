@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   passwordHash: { type: String, required: true }, 
   phone: { type: String, trim: true },
+  profilePic: { type: String, default: '' },
   role: {type: String,enum: ['customer', 'vendor', 'superadmin'], default: 'customer' 
   },
   isActive: { type: Boolean, default: true }
@@ -47,6 +48,7 @@ const ProductSchema = new mongoose.Schema({
   description: { type: String },
   price: { type: Number, required: true, min: 0 },
   stockQuantity: { type: Number, required: true, default: 0, min: 0 },
+  category: { type: String, default: '' },
   images: [{ type: String }],
   variants: [{ type: String }] 
 }, { timestamps: true });

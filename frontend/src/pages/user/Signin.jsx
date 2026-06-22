@@ -1,0 +1,275 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+
+const brandingVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.1 },
+  },
+};
+
+const brandingItem = {
+  hidden: { opacity: 0, x: -80 },
+  visible: { opacity: 1, x: 0 },
+};
+
+const formVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.3 },
+  },
+};
+
+const formItem = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0 },
+};
+
+export default function Signin() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [remember, setRemember] = useState(false);
+
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/user/signin",
+        form
+      );
+      login(res.data.user, res.data.token);
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      alert("Login Failed");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col md:flex-row md:h-[520px]"
+      >
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <motion.div
+            className="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-[0.03] blur-3xl"
+            style={{
+              background: "radial-gradient(circle, #3B82F6, transparent 70%)",
+            }}
+            animate={{ x: [0, 40, 0], y: [0, -30, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute -bottom-32 -right-16 w-96 h-96 rounded-full opacity-[0.02] blur-3xl"
+            style={{
+              background: "radial-gradient(circle, #3B82F6, transparent 70%)",
+            }}
+            animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+
+        <div
+          className="absolute left-1/2 top-0 w-px h-full z-10 hidden md:block"
+          style={{
+            background:
+              "linear-gradient(to bottom, transparent 5%, rgba(59,130,246,0.4) 30%, rgba(59,130,246,0.6) 50%, rgba(59,130,246,0.4) 70%, transparent 95%)",
+            transform: "translateX(-50%) skewY(15deg)",
+            transformOrigin: "top center",
+          }}
+        />
+
+        <div className="relative w-full md:w-1/2 min-h-[280px] md:min-h-full flex flex-col items-center justify-center p-8 md:p-12 text-center">
+          <motion.div
+            variants={brandingVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col items-center"
+          >
+            <motion.div
+              variants={brandingItem}
+              className="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 mb-5"
+            >
+              <svg
+                className="w-7 h-7 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+            </motion.div>
+
+            <motion.h1
+              variants={brandingItem}
+              className="text-3xl font-bold text-white tracking-tight"
+            >
+              Shophub
+            </motion.h1>
+
+            <motion.p
+              variants={brandingItem}
+              className="text-slate-400 text-xs tracking-[0.2em] uppercase mt-3"
+            >
+              Multi-Tenant E-Commerce Platform
+            </motion.p>
+
+            <motion.div
+              variants={brandingItem}
+              className="w-12 h-0.5 bg-blue-500/40 rounded-full mt-5"
+            />
+
+            <motion.p
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.9,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="text-slate-300 text-base mt-5 max-w-xs leading-relaxed"
+            >
+              The complete operating system for multi-tenant marketplaces.
+            </motion.p>
+          </motion.div>
+        </div>
+
+        <div className="relative w-full md:w-1/2 min-h-[400px] md:min-h-full flex flex-col justify-center p-8 md:p-12">
+          <motion.div
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.h2
+              variants={formItem}
+              className="text-xl font-bold text-white tracking-tight"
+            >
+              Welcome back
+            </motion.h2>
+            <motion.p
+              variants={formItem}
+              className="text-slate-400 mt-1 mb-6"
+            >
+              Sign in to your account
+            </motion.p>
+
+            <form onSubmit={handleSubmit}>
+              <motion.div variants={formItem} className="mb-3">
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  placeholder="you@company.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 caret-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
+                />
+              </motion.div>
+
+              <motion.div variants={formItem} className="mb-3">
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  autoComplete="current-password"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 caret-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
+                />
+              </motion.div>
+
+              <motion.div
+                variants={formItem}
+                className="flex items-center justify-between mb-5"
+              >
+                <label className="flex items-center gap-2.5 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
+                    className="peer sr-only"
+                  />
+                  <span className="w-4 h-4 rounded border border-slate-600 bg-slate-800/50 flex items-center justify-center peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-all duration-200 group-hover:border-slate-500 shrink-0">
+                    <svg
+                      className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-200 select-none">
+                    Remember me
+                  </span>
+                </label>
+                <button
+                  type="button"
+                  className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200"
+                >
+                  Forgot password?
+                </button>
+              </motion.div>
+
+              <motion.div variants={formItem}>
+                <motion.button
+                  type="submit"
+                  whileHover={{
+                    scale: 1.01,
+                    boxShadow: "0 8px 30px rgba(59, 130, 246, 0.25)",
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-black/30 cursor-pointer transition-colors duration-200"
+                >
+                  Sign In
+                </motion.button>
+              </motion.div>
+            </form>
+
+            <motion.p
+              variants={formItem}
+              className="text-center text-slate-400 mt-5 text-sm"
+            >
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="text-blue-500 hover:text-blue-400 font-medium transition-colors duration-200"
+              >
+                Register
+              </Link>
+            </motion.p>
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}

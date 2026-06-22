@@ -26,6 +26,7 @@ const productCheck = z.object({
   description: z.string().optional(),
   price: z.number().positive("Price must be a positive number"),
   stockQuantity: z.number().int().nonnegative("Stock cannot be negative"),
+  category: z.string().optional(),
   images: z.array(z.string().url("Each image must be a valid URL")).default([]),
   variants: z.array(z.string()).default([])
 });
@@ -54,8 +55,15 @@ const orderCheck = z.object({
   stripePaymentIntentId: z.string().optional()
 });
 
+const profileUpdateCheck = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters").max(50).optional(),
+  phone: z.string().optional(),
+  profilePic: z.string().optional()
+});
+
 module.exports = {
   userCheck,
+  profileUpdateCheck,
   storeCheck,
   productCheck,
   orderCheck
