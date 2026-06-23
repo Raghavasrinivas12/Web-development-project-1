@@ -1,169 +1,126 @@
-import {
-  ShoppingCart,
-  Trash2,
-  Plus,
-  Minus,
-  Star,
-} from "lucide-react";
+import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
+import { ShoppingBag, Trash2, Plus, Minus, ArrowLeft } from "lucide-react";
 
-const Cart = () => {
-  const cartItems = [
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 1499,
-      originalPrice: 1999,
-      discount: 25,
-      rating: 4.5,
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      price: 2999,
-      originalPrice: 3999,
-      discount: 25,
-      rating: 4.2,
-      quantity: 1,
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
-    },
-  ];
+const placeholders = [
+  "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+  "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+  "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46",
+  "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
+  "https://images.unsplash.com/photo-1503602642458-232111445657",
+  "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+];
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+export default function Cart() {
+  const { items, removeItem, updateQuantity, clearCart, totalItems, totalPrice } = useCart();
 
-  const shipping = 100;
-  const total = subtotal + shipping;
+  const getImage = (product) => {
+    if (product.images && product.images.length > 0) return product.images[0];
+    return placeholders[product.title.length % placeholders.length];
+  };
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-800 flex items-center justify-center">
+            <ShoppingBag size={36} className="text-slate-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Your cart is empty</h2>
+          <p className="text-slate-400 mb-6">Add some products to get started</p>
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors duration-200"
+          >
+            <ArrowLeft size={18} />
+            Browse Products
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white px-6 py-10">
-      {/* Heading */}
-      <div className="flex items-center gap-3 mb-8">
-        <ShoppingCart
-          size={32}
-          className="text-blue-500"
-        />
-        <h1 className="text-4xl font-bold">
-          Shopping Cart
-        </h1>
-      </div>
+    <div className="min-h-screen bg-slate-950 px-4 py-10">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Shopping Cart</h1>
+            <p className="text-slate-400 text-sm mt-1">
+              {totalItems} item{totalItems !== 1 ? "s" : ""} · ₹{totalPrice.toLocaleString()}
+            </p>
+          </div>
+          <button
+            onClick={clearCart}
+            className="text-sm text-red-400 hover:text-red-300 transition"
+          >
+            Clear All
+          </button>
+        </div>
 
-      
-        {/* Cart Items */}
-        <div className=" space-y-6">
-          {cartItems.map((item) => (
+        <div className="space-y-4">
+          {items.map((item) => (
             <div
-              key={item.id}
-              className="bg-slate-900 rounded-xl p-6 flex flex-col md:flex-row gap-6 shadow-lg w-full"
+              key={item._id}
+              className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center gap-4"
             >
-              {/* Product Image */}
               <img
-                src={item.image}
-                alt={item.name}
-                className="w-full md:w-40 h-40 object-cover rounded-lg"
+                src={getImage(item)}
+                alt={item.title}
+                className="w-20 h-20 rounded-lg object-cover shrink-0"
               />
 
-              {/* Product Details */}
-              <div className="flex-1">
-                <h2 className="text-xl font-semibold">
-                  {item.name}
-                </h2>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1 mt-2">
-                  <Star
-                    size={16}
-                    className="fill-yellow-400 text-yellow-400"
-                  />
-                  <span className="text-sm text-slate-300">
-                    {item.rating}
-                  </span>
-                </div>
-
-                {/* Price */}
-                <div className="mt-3">
-                  <span className="text-blue-500 text-xl font-bold">
-                    ₹{item.price}
-                  </span>
-
-                  <span className="ml-3 text-slate-400 line-through">
-                    ₹{item.originalPrice}
-                  </span>
-
-                  <span className="ml-3 text-green-500 font-semibold">
-                    {item.discount}% OFF
-                  </span>
-                </div>
-
-                {/* Quantity */}
-                <div className="flex items-center gap-3 mt-5">
-                  <button className="bg-slate-800 p-2 rounded-lg hover:bg-slate-700">
-                    <Minus size={16} />
-                  </button>
-
-                  <span className="font-semibold">
-                    {item.quantity}
-                  </span>
-
-                  <button className="bg-slate-800 p-2 rounded-lg hover:bg-slate-700">
-                    <Plus size={16} />
-                  </button>
-                </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-white font-semibold truncate">{item.title}</h3>
+                <p className="text-blue-500 font-bold mt-1">
+                  ₹{item.price?.toLocaleString()}
+                </p>
               </div>
 
-              {/* Remove */}
-              <button className="self-start bg-slate-500 hover:bg-blue-600 p-2 rounded-lg transition">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition"
+                >
+                  <Minus size={14} />
+                </button>
+                <span className="text-white font-medium w-6 text-center">
+                  {item.quantity}
+                </span>
+                <button
+                  onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
+
+              <p className="text-white font-semibold w-24 text-right">
+                ₹{(item.price * item.quantity).toLocaleString()}
+              </p>
+
+              <button
+                onClick={() => removeItem(item._id)}
+                className="text-slate-500 hover:text-red-400 transition shrink-0"
+              >
                 <Trash2 size={18} />
               </button>
             </div>
           ))}
         </div>
 
-        {/* Order Summary */}
-        <div className="bg-slate-900 rounded-xl p-6 mt-8 shadow-lg w-full">
-          <h2 className="text-2xl font-bold mb-6">
-            Order Summary
-          </h2>
-
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>₹{subtotal}</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span>Shipping</span>
-              <span>₹{shipping}</span>
-            </div>
-
-            <div className="flex justify-between text-green-500">
-              <span>Discount</span>
-              <span>-₹500</span>
-            </div>
-
-            <hr className="border-slate-700" />
-
-            <div className="flex justify-between text-xl font-bold">
-              <span>Total</span>
-
-              <span className="text-blue-500">
-                ₹{total}
-              </span>
-            </div>
-
-            <button className="w-full  bg-blue-500 hover:bg-blue-600 py-4 rounded-lg font-semibold transition">
-              Proceed to Checkout
-            </button>
+        <div className="mt-8 bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="flex items-center justify-between text-lg">
+            <span className="text-slate-300">Total</span>
+            <span className="text-white font-bold text-xl">
+              ₹{totalPrice.toLocaleString()}
+            </span>
           </div>
+          <button className="mt-4 w-full py-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl transition-colors duration-200">
+            Proceed to Checkout
+          </button>
         </div>
-      
+      </div>
     </div>
   );
-};
-
-export default Cart;
+}

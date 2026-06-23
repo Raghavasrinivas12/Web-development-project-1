@@ -131,7 +131,7 @@ router.put('/:id', authMiddleware, restrictTo('vendor'), validateBody(productChe
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
       { $set: req.body },
-      { new: true } 
+      { returnDocument: 'after' }
     );
 
     return res.json({

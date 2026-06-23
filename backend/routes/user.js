@@ -181,7 +181,7 @@ router.put('/profile', authMiddleware, async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.user.userid,
       updates,
-      { new: true }
+      { returnDocument: 'after' }
     ).select('-passwordHash');
 
     if (!user) {

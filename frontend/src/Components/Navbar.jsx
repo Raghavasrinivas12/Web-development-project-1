@@ -25,6 +25,8 @@ import {
   Receipt,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 const categories = [
   { name: "Electronics", icon: <Laptop size={16} /> },
@@ -36,6 +38,8 @@ const categories = [
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { totalItems } = useCart();
+  const { items: wishlistItems } = useWishlist();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
@@ -105,12 +109,20 @@ const Navbar = () => {
 
             <Link to="/cart" className="relative hover:text-blue-500 transition">
               <ShoppingCart size={20} />
-              <span className="absolute -top-2 -right-2 bg-blue-500 text-xs px-1.5 rounded-full">0</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-blue-500 text-xs px-1.5 rounded-full">
+                  {totalItems}
+                </span>
+              )}
             </Link>
 
             <Link to="/wishlist" className="relative hover:text-blue-500 transition">
               <Heart size={20} />
-              <span className="absolute -top-2 -right-2 bg-blue-500 text-xs px-1.5 rounded-full">0</span>
+              {wishlistItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-blue-500 text-xs px-1.5 rounded-full">
+                  {wishlistItems.length}
+                </span>
+              )}
             </Link>
 
             {isAuthenticated ? (
@@ -119,9 +131,17 @@ const Navbar = () => {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center gap-2 hover:text-blue-500 transition"
                 >
-                    <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold text-white">
-                      {user?.username?.charAt(0)?.toUpperCase() || "U"}
-                    </div>
+                    {user?.profilePic ? (
+                      <img
+                        src={user.profilePic}
+                        alt=""
+                        className="w-8 h-8 rounded-full object-cover border border-slate-600"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold text-white">
+                        {user?.username?.charAt(0)?.toUpperCase() || "U"}
+                      </div>
+                    )}
                   <ChevronDown size={14} />
                 </button>
 
@@ -192,9 +212,13 @@ const Navbar = () => {
 
         {isAuthenticated && (
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800">
+            {user?.profilePic ? (
+              <img src={user.profilePic} alt="" className="w-9 h-9 rounded-full object-cover" />
+            ) : (
               <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-sm font-bold text-white">
                 {user?.username?.charAt(0)?.toUpperCase() || "U"}
               </div>
+            )}
             <div className="text-sm">
               <p className="text-white font-medium truncate">{user?.username}</p>
               <p className="text-slate-400 truncate">{user?.email}</p>
