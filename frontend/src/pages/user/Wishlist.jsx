@@ -1,117 +1,129 @@
-import {
-  Heart,
-  ShoppingCart,
-  Trash2,
-  Star,
-} from "lucide-react";
+import { Link } from "react-router-dom";
+import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../context/CartContext";
+import { Heart, ShoppingCart, Trash2, Star, ArrowLeft } from "lucide-react";
+
+const placeholders = [
+  "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+  "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+  "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46",
+  "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
+  "https://images.unsplash.com/photo-1503602642458-232111445657",
+  "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
+];
 
 const Wishlist = () => {
-  const wishlistItems = [
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 1499,
-      originalPrice: 1999,
-      discount: 25,
-      rating: 4.5,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      price: 2999,
-      originalPrice: 3999,
-      discount: 25,
-      rating: 4.2,
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
-    },
-    {
-      id: 3,
-      name: "Gaming Mouse",
-      price: 799,
-      originalPrice: 1199,
-      discount: 33,
-      rating: 4.7,
-      image:
-        "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=500",
-    },
-    {
-    id: 4,
-    name: "Laptop",
-    price: "₹49,999",
-    originalPrice: 60000,
-    discount: 10,
-    rating: 4.2,
-    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
-  },
-  ];
+  const { items, removeItem } = useWishlist();
+  const { addItem } = useCart();
+
+  const getImage = (product) => {
+    if (product.images && product.images.length > 0) return product.images[0];
+    return placeholders[product.title.length % placeholders.length];
+  };
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-slate-800 flex items-center justify-center">
+            <Heart size={36} className="text-slate-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Your Wishlist is Empty
+          </h2>
+          <p className="text-slate-400 mb-6">
+            Save items you love and view them later.
+          </p>
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors duration-200"
+          >
+            <ArrowLeft size={18} />
+            Browse Products
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className=" bg-slate-950 text-white px-6 py-14">
-      {/* Heading */}
-      <div className="flex items-center gap-3 mb-8">
-        <Heart className="text-blue-500" size={32} />
-        <h1 className="text-4xl font-bold">
-          My Wishlist
-        </h1>
-      </div>
+    <div className="min-h-screen bg-slate-950 px-4 py-10">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center gap-3 mb-8">
+          <Heart className="text-blue-500" size={28} />
+          <h1 className="text-3xl font-bold text-white">My Wishlist</h1>
+          <span className="text-slate-400 text-sm mt-1.5">
+            ({items.length} item{items.length !== 1 ? "s" : ""})
+          </span>
+        </div>
 
-      {wishlistItems.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {wishlistItems.map((item) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {items.map((item) => (
             <div
-              key={item.id}
-              className="bg-slate-900 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300"
+              key={item._id}
+              className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all duration-200"
             >
-              {/* Product Image */}
-              <img
-                src={item.image}
-                alt={item.name}
-                className="h-48 w-full object-cover"
-              />
+              <div className="relative">
+                <img
+                  src={getImage(item)}
+                  alt={item.title}
+                  className="h-48 w-full object-cover"
+                />
+                <button
+                  onClick={() => removeItem(item._id)}
+                  className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-900/80 flex items-center justify-center hover:bg-red-500/80 transition"
+                >
+                  <Trash2 size={16} className="text-white" />
+                </button>
+              </div>
 
               <div className="p-3">
-                {/* Product Name */}
                 <h3 className="text-white text-base font-semibold">
-                  {item.name}
+                  {item.title}
                 </h3>
 
-                {/* Rating */}
-                <div className="flex items-center gap-1 mt-2">
-                  <Star
-                    size={16}
-                    className="fill-yellow-400 text-yellow-400"
-                  />
-                  <span className="text-sm text-slate-300">
-                    {item.rating}
+                {item.rating && (
+                  <div className="flex items-center gap-1 mt-2">
+                    <Star
+                      size={16}
+                      className="fill-yellow-400 text-yellow-400"
+                    />
+                    <span className="text-sm text-slate-300">
+                      {item.rating}
+                    </span>
+                  </div>
+                )}
+
+                <div className="mt-2">
+                  <span className="text-blue-500 font-bold">
+                    ₹{item.price?.toLocaleString()}
                   </span>
+                  {item.originalPrice && (
+                    <>
+                      <span className="ml-2 text-slate-400 line-through text-sm">
+                        ₹{item.originalPrice?.toLocaleString()}
+                      </span>
+                      {item.discount && (
+                        <span className="ml-2 text-green-500 font-semibold text-sm">
+                          {item.discount}% OFF
+                        </span>
+                      )}
+                    </>
+                  )}
                 </div>
 
-                {/* Price */}
-                <div className="mt-3">
-                  <span className="text-blue-500 text-xl font-bold">
-                    ₹{item.price}
-                  </span>
-
-                  <span className="ml-3 text-slate-400 line-through">
-                    ₹{item.originalPrice}
-                  </span>
-
-                  <span className="ml-3 text-green-500 font-semibold">
-                    {item.discount}% OFF
-                  </span>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-3 mt-5">
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 py-2 rounded-lg transition">
-                    
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => addItem(item)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 py-2.5 rounded-lg transition-colors duration-200 font-medium"
+                  >
+                    <ShoppingCart size={16} />
                     Add to Cart
                   </button>
-
-                  <button className="p-2 bg-slate-500 hover:bg-red-600 rounded-lg transition">
+                  <button
+                    onClick={() => removeItem(item._id)}
+                    className="p-2.5 bg-slate-800 hover:bg-red-500/80 rounded-lg transition-colors duration-200"
+                  >
                     <Trash2 size={18} />
                   </button>
                 </div>
@@ -119,22 +131,7 @@ const Wishlist = () => {
             </div>
           ))}
         </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center mt-20">
-          <Heart
-            size={80}
-            className="text-slate-700 mb-4"
-          />
-
-          <h2 className="text-2xl font-semibold mb-2">
-            Your Wishlist is Empty
-          </h2>
-
-          <p className="text-slate-400">
-            Save items you love and view them later.
-          </p>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

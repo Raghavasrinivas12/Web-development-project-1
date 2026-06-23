@@ -14,12 +14,14 @@ const storeRouter=require('./routes/store')
 const userRouter=require('./routes/user')
 const orderRouter=require('./routes/order')
 const productRouter=require('./routes/product')
+const homeRouter=require('./routes/home')
 
 
 app.use('/api/user',userRouter)
 app.use('/api/stores',storeRouter)
 app.use('/api/orders',orderRouter)
 app.use('/api/products',productRouter)
+app.use('/api/home',homeRouter)
 
 
 app.listen(PORT, () => {

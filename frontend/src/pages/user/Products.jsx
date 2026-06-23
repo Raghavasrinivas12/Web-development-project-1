@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
+import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 import {
   Laptop,
   Shirt,
@@ -8,6 +10,8 @@ import {
   ShoppingBasket,
   Watch,
   X,
+  ShoppingCart,
+  Heart,
 } from "lucide-react";
 
 const categories = [
@@ -28,6 +32,8 @@ const placeholders = [
 ];
 
 export default function Products() {
+  const { addItem, items } = useCart();
+  const { toggleItem, isWishlisted } = useWishlist();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get("category") || "";
 
@@ -166,11 +172,26 @@ export default function Products() {
                 key={product._id}
                 className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all duration-200"
               >
-                <img
-                  src={getImage(product)}
-                  alt={product.title}
-                  className="h-48 w-full object-cover"
-                />
+                <div className="relative">
+                  <img
+                    src={getImage(product)}
+                    alt={product.title}
+                    className="h-48 w-full object-cover"
+                  />
+                  <button
+                    onClick={() => toggleItem(product)}
+                    className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-900/80 flex items-center justify-center hover:bg-slate-800 transition"
+                  >
+                    <Heart
+                      size={16}
+                      className={
+                        isWishlisted(product._id)
+                          ? "fill-red-500 text-red-500"
+                          : "text-white"
+                      }
+                    />
+                  </button>
+                </div>
 
                 <div className="p-4">
                   {product.storeId && (
@@ -201,8 +222,14 @@ export default function Products() {
                     </span>
                   </div>
 
-                  <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors duration-200">
-                    Add to Cart
+                  <button
+                    onClick={() => addItem(product)}
+                    className="mt-3 w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors duration-200"
+                  >
+                    <ShoppingCart size={16} />
+                    {items.find((i) => i._id === product._id)
+                      ? "Add Again"
+                      : "Add to Cart"}
                   </button>
                 </div>
               </div>

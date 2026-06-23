@@ -91,9 +91,26 @@ const OrderSchema = new mongoose.Schema({
   stripePaymentIntentId: { type: String } //payment webhooks
 }, { timestamps: true });
 
+// BANNER SCHEMA
+const BannerSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  subtitle: { type: String },
+  image: { type: String, required: true },
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true });
+
+// CATEGORY SCHEMA
+const CategorySchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
+  image: { type: String },
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true });
+
 const User = mongoose.model('User', UserSchema);
 const Store = mongoose.model('Store', StoreSchema);
 const Product = mongoose.model('Product', ProductSchema);
 const Order = mongoose.model('Order', OrderSchema);
+const Banner = mongoose.model('Banner', BannerSchema);
+const Category = mongoose.model('Category', CategorySchema);
 
-module.exports = { User, Store, Product, Order };
+module.exports = { User, Store, Product, Order, Banner, Category };
