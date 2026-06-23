@@ -22,6 +22,7 @@ import {
   Watch,
   LogOut,
   Settings,
+  Receipt,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -97,6 +98,8 @@ const Navbar = () => {
                 ))}
               </div>
             </div>
+
+             <Link to="/myorders" className="hover:text-blue-500 transition">My Orders</Link>
 
             <Link to="/products" className="hover:text-blue-500 transition">Products</Link>
 
@@ -242,6 +245,10 @@ const Navbar = () => {
             )}
           </div>
 
+          <Link to="/myorders" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+            <Receipt size={18} /> My Orders
+          </Link>
+
           <Link to="/products" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
             <Package size={18} /> Products
           </Link>
@@ -271,6 +278,10 @@ const Navbar = () => {
 
           <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
             <ShoppingCart size={18} /> Cart
+          </Link>
+
+          <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+            <Heart size={18} /> Wishlist
           </Link>
         </div>
       </div>

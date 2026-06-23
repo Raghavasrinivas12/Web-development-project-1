@@ -12,8 +12,8 @@ const WhyShopHub = () => {
         Why ShopHub?
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-slate-900 p-6 rounded-xl text-center">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 ">
+        <div className="bg-slate-900 p-6 rounded-xl text-center ">
           <Store
             size={44}
             className="mx-auto text-blue-500 mb-3"
