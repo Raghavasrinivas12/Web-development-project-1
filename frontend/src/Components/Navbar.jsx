@@ -62,6 +62,8 @@ const Navbar = () => {
     navigate("/");
   };
 
+  
+
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 bg-slate-900 text-white shadow-lg border-b border-slate-800">
@@ -75,14 +77,16 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center bg-slate-950 rounded-lg px-3 py-1.5 w-1/3">
-            <Search size={16} className="text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="bg-transparent outline-none px-2 w-full text-white placeholder-slate-400 text-sm"
-            />
-          </div>
+         <button
+  onClick={() => navigate("/search")}
+  className="hidden md:flex items-center gap-2 hover:text-blue-500 transition"
+>
+  <Search size={22} />
+  <span>Search Products</span>
+</button>
+           
+            
+          
 
           <div className="hidden md:flex items-center gap-5 font-medium text-sm">
             <Link to="/" className="hover:text-blue-500 transition">Home</Link>
@@ -188,10 +192,19 @@ const Navbar = () => {
             )}
           </div>
 
-          <button className="md:hidden" onClick={() => setIsOpen(true)}>
-            <Menu size={24} />
-          </button>
-        </div>
+         <div className="flex items-center gap-3 md:hidden">
+  <button
+    onClick={() => navigate("/search")}
+    className="hover:text-blue-500 transition"
+  >
+    <Search size={22} />
+  </button>
+
+  <button className="md:hidden hover:text-blue-400" onClick={() => setIsOpen(true)}>
+    <Menu size={24} />
+  </button>
+</div>
+</div>
       </nav>
 
       {isOpen && (
@@ -207,7 +220,7 @@ const Navbar = () => {
           <h2 className="text-xl font-bold">
             Shop<span className="text-blue-500">Hub</span>
           </h2>
-          <button onClick={() => setIsOpen(false)}><X size={22} /></button>
+          <button onClick={() => setIsOpen(false)}><X size={22} className="hover:text-blue-500" /></button>
         </div>
 
         {isAuthenticated && (
@@ -226,16 +239,7 @@ const Navbar = () => {
           </div>
         )}
 
-        <div className="p-4">
-          <div className="flex items-center bg-slate-950 rounded-lg px-3 py-1.5">
-            <Search size={16} className="text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="bg-transparent outline-none px-2 w-full text-white placeholder-slate-400 text-sm"
-            />
-          </div>
-        </div>
+        
 
         <div className="flex flex-col p-4 gap-4 text-sm">
           <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
@@ -309,6 +313,7 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
+      
     </>
   );
 };

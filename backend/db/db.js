@@ -8,7 +8,8 @@ mongoose.connect(
   console.log('Connected to MongoDB');
 })
 .catch((error) => {
-  console.error('Error connecting to MongoDB:', error.message);
+  console.error('MongoDB Error:');
+  console.error(error);
 });
 
 // USER SCHEMA
