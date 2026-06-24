@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { Camera } from "lucide-react";
 import axios from "axios";
 
 export default function Profile() {
   const { user, token, updateUser, logout } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ username: "", phone: "", profilePic: "" });
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -37,6 +40,25 @@ export default function Profile() {
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("image", file);
+      const res = await axios.post("http://localhost:5000/api/upload", fd, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      });
+      setForm((prev) => ({ ...prev, profilePic: res.data.url }));
+    } catch {
+      alert("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSave = async () => {
@@ -78,31 +100,53 @@ export default function Profile() {
     <div className="min-h-screen bg-slate-950 py-16 px-4">
       <div className="max-w-lg mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 p-8">
         <div className="flex flex-col items-center">
-          {form.profilePic ? (
-            <img
-              src={form.profilePic}
-              alt="avatar"
-              className="w-20 h-20 rounded-full object-cover border-2 border-blue-500"
-            />
-          ) : (
-            <div className="w-20 h-20 rounded-full bg-blue-500 flex items-center justify-center text-2xl font-bold text-white">
-              {user?.username?.charAt(0)?.toUpperCase() || "U"}
-            </div>
+          <div className="relative">
+            {form.profilePic ? (
+              <img
+                src={form.profilePic}
+                alt="avatar"
+                className="w-24 h-24 rounded-full object-cover border-2 border-blue-500"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center text-3xl font-bold text-white">
+                {user?.username?.charAt(0)?.toUpperCase() || "U"}
+              </div>
+            )}
+
+            {editing && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center border-2 border-slate-900 transition disabled:opacity-50"
+                >
+                  <Camera size={14} className="text-white" />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </>
+            )}
+          </div>
+
+          {uploading && (
+            <p className="text-blue-400 text-xs mt-2">Uploading...</p>
           )}
 
           <h1 className="text-2xl font-bold text-white mt-4">
             {user?.username}
           </h1>
-          <p className="text-slate-400 text-sm capitalize">
-            {user?.role}
-          </p>
+          <p className="text-slate-400 text-sm capitalize">{user?.role}</p>
         </div>
 
         <div className="mt-8 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              Username
-            </label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Username</label>
             {editing ? (
               <input
                 type="text"
@@ -112,25 +156,17 @@ export default function Profile() {
                 className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
               />
             ) : (
-              <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">
-                {user?.username}
-              </p>
+              <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.username}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              Email
-            </label>
-            <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">
-              {user?.email}
-            </p>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
+            <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.email}</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              Phone
-            </label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Phone</label>
             {editing ? (
               <input
                 type="text"
@@ -140,29 +176,7 @@ export default function Profile() {
                 className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
               />
             ) : (
-              <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">
-                {user?.phone || "—"}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              Profile Picture URL
-            </label>
-            {editing ? (
-              <input
-                type="text"
-                name="profilePic"
-                value={form.profilePic}
-                onChange={handleChange}
-                placeholder="https://example.com/avatar.jpg"
-                className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
-              />
-            ) : (
-              <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl truncate">
-                {user?.profilePic || "—"}
-              </p>
+              <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.phone || "—"}</p>
             )}
           </div>
 

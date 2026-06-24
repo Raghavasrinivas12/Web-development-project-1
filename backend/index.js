@@ -15,6 +15,8 @@ const userRouter=require('./routes/user')
 const orderRouter=require('./routes/order')
 const productRouter=require('./routes/product')
 const homeRouter=require('./routes/home')
+const paymentRouter=require('./routes/payment')
+const uploadRouter=require('./routes/upload')
 
 
 app.use('/api/user',userRouter)
@@ -22,6 +24,8 @@ app.use('/api/stores',storeRouter)
 app.use('/api/orders',orderRouter)
 app.use('/api/products',productRouter)
 app.use('/api/home',homeRouter)
+app.use('/api/payment',paymentRouter)
+app.use('/api/upload',uploadRouter)
 
 
 app.listen(PORT, () => {
