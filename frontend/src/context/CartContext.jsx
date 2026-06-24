@@ -1,71 +1,56 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-const CartContext = createContext(null);
+const CartContext = createContext();
 
-export function CartProvider({ children }) {
-  const [items, setItems] = useState(() => {
-    try {
-      const stored = localStorage.getItem("cart");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+export const CartProvider = ({ children }) => {
+  const [items, setItems] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(items));
+    const count = items.reduce((acc, item) => acc + item.quantity, 0);
+    const price = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    setTotalItems(count);
+    setTotalPrice(price);
   }, [items]);
 
   const addItem = (product) => {
     setItems((prev) => {
-      const existing = prev.find((item) => item._id === product._id);
+      const existing = prev.find((i) => i._id === product._id);
+      const stockLimit = product.stockQuantity || Infinity;
       if (existing) {
-        return prev.map((item) =>
-          item._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+        if (existing.quantity >= stockLimit) return prev;
+        return prev.map((i) =>
+          i._id === product._id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
       return [...prev, { ...product, quantity: 1 }];
     });
   };
 
-  const removeItem = (id) => {
-    setItems((prev) => prev.filter((item) => item._id !== id));
+  const updateQuantity = (id, newQty) => {
+    setItems((prev) =>
+      prev.map((i) => {
+        if (i._id !== id) return i;
+        const stockLimit = i.stockQuantity || Infinity;
+        if (newQty > stockLimit) return { ...i, quantity: stockLimit };
+        if (newQty <= 0) return null;
+        return { ...i, quantity: newQty };
+      }).filter(Boolean)
+    );
   };
 
-  const updateQuantity = (id, quantity) => {
-    if (quantity < 1) return removeItem(id);
-    setItems((prev) =>
-      prev.map((item) =>
-        item._id === id ? { ...item, quantity } : item
-      )
-    );
+  const removeItem = (id) => {
+    setItems((prev) => prev.filter((i) => i._id !== id));
   };
 
   const clearCart = () => setItems([]);
 
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        totalItems,
-        totalPrice,
-      }}
-    >
+    <CartContext.Provider value={{ items, totalItems, totalPrice, addItem, updateQuantity, removeItem, clearCart }}>
       {children}
     </CartContext.Provider>
   );
-}
+};
 
 export const useCart = () => useContext(CartContext);

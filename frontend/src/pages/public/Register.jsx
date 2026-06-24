@@ -40,7 +40,7 @@ export default function Register() {
     phone: "",
     role: "customer",
   });
-
+  console.log("form",form)
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
