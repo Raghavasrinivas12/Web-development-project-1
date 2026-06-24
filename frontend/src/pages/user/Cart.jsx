@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { ShoppingBag, Trash2, Plus, Minus, ArrowLeft } from "lucide-react";
 
@@ -12,6 +12,7 @@ const placeholders = [
 ];
 
 export default function Cart() {
+  const navigate = useNavigate();
   const { items, removeItem, updateQuantity, clearCart, totalItems, totalPrice } = useCart();
 
   const getImage = (product) => {
@@ -116,7 +117,10 @@ export default function Cart() {
               ₹{totalPrice.toLocaleString()}
             </span>
           </div>
-          <button className="mt-4 w-full py-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl transition-colors duration-200">
+          <button
+            onClick={() => navigate("/checkout")}
+            className="mt-4 w-full py-3 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl transition-colors duration-200"
+          >
             Proceed to Checkout
           </button>
         </div>
