@@ -3,28 +3,25 @@ import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 
-// Layout Containers
 import UserLayout from "./Layouts/UserLayout";
 import VendorLayout from "./Layouts/VendorLayout";
 
-// Access Restriction Tool
 import ProtectedRoute from "./Components/ProtectedRoute";
 
-// Public Marketplace Views
 import Home from "./pages/public/Home";
 import Signin from "./pages/public/Signin";
 import Register from "./pages/public/Register";
 import Products from "./pages/public/Products";
 import Wishlist from "./pages/public/Wishlist";
 
-// Customer Restricted Views
 import Profile from "./pages/customer/Profile";
 import Cart from "./pages/customer/Cart";
 
-// Vendor Tenant Dashboards (Create dummy UI components for these files to test)
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import ManageProducts from "./pages/vendor/ManageProducts";
 import StoreSettings from "./pages/vendor/StoreSettings";
+// import Checkout from "./pages/public/Checkout";
+// import PaymentSuccess from "./pages/public/PaymentSuccess"
 
 function App() {
   return (
@@ -34,20 +31,18 @@ function App() {
           <WishlistProvider>
             <Routes>
               
-              {/* =========================================================
-                  1. GLOBAL PUBLIC ROUTING CHANNEL (Retail Layout)
-                 ========================================================= */}
+            
               <Route element={<UserLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Signin />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/wishlist" element={<Wishlist />} />
+                {/* <Route path="checkout" element={<Checkout />} /> */}
+                {/* <Route path="payment-success" element={<PaymentSuccess />} /> */}
               </Route>
 
-              {/* =========================================================
-                  2. PROTECTED CUSTOMER PATHS (Requires login + 'customer' role)
-                 ========================================================= */}
+            
               <Route element={<ProtectedRoute allowedRoles={["customer"]} />}>
                 <Route element={<UserLayout />}>
                   <Route path="/profile" element={<Profile />} />
@@ -55,9 +50,7 @@ function App() {
                 </Route>
               </Route>
 
-              {/* =========================================================
-                  3. PROTECTED MULTI-TENANT VENDOR WORKSPACE (Dashboard Layout)
-                 ========================================================= */}
+            
               <Route element={<ProtectedRoute allowedRoles={["vendor"]} />}>
                 <Route path="/vendor/dashboard" element={<VendorLayout />}>
                   <Route index element={<VendorDashboard />} />
