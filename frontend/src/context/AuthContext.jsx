@@ -3,11 +3,12 @@ import { createContext, useContext, useState, useEffect } from "react";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+  const [token, setToken] = useState(()=>localStorage.getItem("token"));
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
     if (token) {
+      console.log("token",localStorage.getItem("user"))
       const stored = localStorage.getItem("user");
       if (stored) {
         try {
