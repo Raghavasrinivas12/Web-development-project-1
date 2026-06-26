@@ -12,6 +12,7 @@ import Cart from "./pages/user/Cart";
 import Wishlist from "./pages/user/Wishlist";
 import Checkout from "./pages/user/Checkout";
 import PaymentSuccess from "./pages/user/PaymentSuccess";
+import MyOrders from "./pages/user/Myorders";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                 <Route path="cart" element={<Cart />} />
                 <Route path="checkout" element={<Checkout />} />
                 <Route path="payment-success" element={<PaymentSuccess />} />
+                <Route path="myorders" element={<MyOrders />} />
                 <Route path="wishlist" element={<Wishlist />} />
               </Route>
             </Routes>
