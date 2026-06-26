@@ -29,7 +29,7 @@ router.post('/', authMiddleware, async (req, res) => {
     if (!validationResult.success) {
       return res.status(400).json({ 
         msg: "Validation error matching payload requirements", 
-        errors: validationResult.error.errors 
+        errors: validationResult.error.issues 
       });
     }
 
@@ -128,7 +128,7 @@ router.put('/:id', authMiddleware, async (req, res) => {
     });
 
     if (!validationResult.success) {
-      return res.status(400).json({ msg: "Invalid updates provided", errors: validationResult.error.errors });
+      return res.status(400).json({ msg: "Invalid updates provided", errors: validationResult.error.issues });
     }
 
     //Check if the updated storename conflicts with another existing store
