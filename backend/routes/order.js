@@ -9,7 +9,7 @@ const { restrictTo } = require('../middleware/roleMiddleware');
 router.post('/checkout', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.userid;
-    const { items, shippingAddress } = req.body;
+    const { items, shippingAddress, orderStatus } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ msg: "Cannot process an empty cart." });
@@ -33,7 +33,7 @@ router.post('/checkout', authMiddleware, async (req, res) => {
       calculatedTotal += product.price * item.quantity;
 
       verifiedItems.push({
-        productId: product._id,
+        productId: product._id.toString(),
         title: product.title,
         quantity: item.quantity,
         priceAtPurchase: product.price
@@ -46,13 +46,14 @@ router.post('/checkout', authMiddleware, async (req, res) => {
       totalAmount: calculatedTotal,
       items: verifiedItems,
       shippingAddress,
-      orderStatus: 'Pending'
+      orderStatus: orderStatus || 'Pending',
     });
 
     if (!validationResult.success) {
+      console.error("Order validation errors:", JSON.stringify(validationResult.error.issues, null, 2));
       return res.status(400).json({ 
         msg: "Validation error on order configuration rules", 
-        errors: validationResult.error.errors 
+        errors: validationResult.error.issues 
       });
     }
 
