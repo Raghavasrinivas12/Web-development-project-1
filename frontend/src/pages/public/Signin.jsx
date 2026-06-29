@@ -92,7 +92,7 @@ export default function Signin() {
           }}
         />
 
-        <div className="relative z-20 w-full md:w-1/2 min-h-70 md:min-h-full flex flex-col items-center justify-center p-8 md:p-12 text-center">
+        <div className="relative w-full md:w-1/2 min-h-70 md:min-h-full flex flex-col items-center justify-center p-8 md:p-12 text-center">
           <motion.div
             variants={brandingVariants}
             initial="hidden"
@@ -152,7 +152,7 @@ export default function Signin() {
           </motion.div>
         </div>
 
-        <div className="relative z-20 w-full md:w-1/2 min-h-100 md:min-h-full flex flex-col justify-center p-8 md:p-12">
+        <div className="relative w-full md:w-1/2 min-h-100 md:min-h-full flex flex-col justify-center p-8 md:p-12">
           <motion.div
             variants={formVariants}
             initial="hidden"

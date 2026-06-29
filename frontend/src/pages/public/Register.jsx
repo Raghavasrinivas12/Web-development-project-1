@@ -66,7 +66,7 @@ export default function Register() {
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col md:flex-row md:h-145"
+        className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col md:flex-row md:h-180"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
@@ -97,7 +97,7 @@ export default function Register() {
           }}
         />
 
-        <div className="relative z-20 w-full md:w-1/2 min-h-100 md:min-h-full flex flex-col justify-center p-8 md:p-12 order-2 md:order-1">
+        <div className="relative w-full md:w-1/2 min-h-100 md:min-h-full flex flex-col justify-center p-8 md:p-12 order-2 md:order-1">
           <motion.div
             variants={formVariants}
             initial="hidden"
@@ -231,7 +231,7 @@ export default function Register() {
           </motion.div>
         </div>
 
-        <div className="relative z-20 w-full md:w-1/2 min-h-70 md:min-h-full flex flex-col items-center justify-center p-8 md:p-12 text-center order-1 md:order-2">
+        <div className="relative w-full md:w-1/2 min-h-70 md:min-h-full flex flex-col items-center justify-center p-8 md:p-12 text-center order-1 md:order-2">
           <motion.div
             variants={brandingVariants}
             initial="hidden"
