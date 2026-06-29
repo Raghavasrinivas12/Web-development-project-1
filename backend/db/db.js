@@ -1,8 +1,11 @@
 const mongoose=require('mongoose');
 require('dotenv').config();
-
+console.log("Mongo URL:", process.env.MONGODB_URL);
 mongoose.connect(
-  `${process.env.MONGODB_URL}`
+  `${process.env.MONGODB_URL}`,
+   {
+    family: 4
+  }
 )
 .then(() => {
   console.log('Connected to MongoDB');

@@ -1,5 +1,6 @@
 
 require('dotenv').config();
+console.log(process.env.MONGODB_URL);
 require('./db/db');
 
 const express=require("express");
