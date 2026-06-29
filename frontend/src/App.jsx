@@ -62,12 +62,17 @@ function App() {
                 </Route>
               </Route>
               
-            <Route path="/admindashboard" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
+            <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+              <Route path="/admindashboard" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+              </Route>
+              <Route path="/adminusers" element={<AdminLayout />}>
+                <Route index element={<AdminUsers />} />
+              </Route>
+              <Route path="/adminvendors" element={<AdminLayout />}>
+                <Route index element={<ManageVendors />} />
+              </Route>
             </Route>
-
-          <Route path="/adminusers" element={<AdminUsers />} />
-          <Route path="/adminvendors" element={<ManageVendors />} />
               
             </Routes>
           </WishlistProvider>
