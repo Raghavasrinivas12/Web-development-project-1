@@ -4,6 +4,7 @@ import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 
 import UserLayout from "./Layouts/UserLayout";
+import AdminLayout from "./Layouts/AdminLayout";
 import VendorLayout from "./Layouts/VendorLayout";
 import ProtectedRoute from "./Components/ProtectedRoute";
 
@@ -22,6 +23,11 @@ import MyOrders from "./pages/public/Myorders";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import ManageProducts from "./pages/vendor/ManageProducts";
 import StoreSettings from "./pages/vendor/StoreSettings";
+
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers"
+import ManageVendors from "./pages/admin/ManageVendors";
 
 function App() {
   return (
@@ -55,6 +61,14 @@ function App() {
                   <Route path="settings" element={<StoreSettings />} />
                 </Route>
               </Route>
+              
+            <Route path="/admindashboard" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            </Route>
+
+          <Route path="/adminusers" element={<AdminUsers />} />
+          <Route path="/adminvendors" element={<ManageVendors />} />
+              
             </Routes>
           </WishlistProvider>
         </CartProvider>
