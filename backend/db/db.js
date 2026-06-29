@@ -37,7 +37,8 @@ const StoreSchema = new mongoose.Schema({
   },
   storeName: { type: String, required: true, unique: true, trim: true },
   description: { type: String },
-  logoUrl: { type: String }
+  logoUrl: { type: String },
+  isApproved: { type: String, enum: ["Pending", "Approved", "Rejected"], default: "Pending" }
 }, { timestamps: true });
 
 

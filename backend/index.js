@@ -18,9 +18,11 @@ const productRouter=require('./routes/product')
 const homeRouter=require('./routes/home')
 const paymentRouter=require('./routes/payment')
 const uploadRouter=require('./routes/upload')
+const adminRouter=require('./routes/admin')
 
 
 app.use('/api/user',userRouter)
+app.use('/api/admin',adminRouter)
 app.use('/api/stores',storeRouter)
 app.use('/api/orders',orderRouter)
 app.use('/api/products',productRouter)

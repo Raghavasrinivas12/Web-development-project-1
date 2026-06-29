@@ -49,7 +49,7 @@ export default function Signin() {
       );
       login(res.data.user, res.data.token);
       const role = res.data.user?.role;
-      if (role === "admin") navigate("/admindashboard");
+      if (role === "superadmin") navigate("/admindashboard");
       else if (role === "vendor") navigate("/vendor/dashboard");
       else navigate("/");
     } catch (err) {

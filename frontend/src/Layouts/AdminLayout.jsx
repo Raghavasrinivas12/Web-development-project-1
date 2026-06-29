@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import {
   LayoutDashboard,
   Users,
@@ -17,8 +18,16 @@ import {
 } from "lucide-react";
 
 const AdminLayout = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   const menuItems = [
     {
@@ -128,12 +137,12 @@ const AdminLayout = () => {
         {/* Logout */}
         <div className="absolute bottom-5 left-0 w-full px-4">
 
-          <button className="w-full flex items-center justify-center gap-2 bg-slate-500 hover:bg-slate-600 py-3 rounded-lg">
-
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 bg-slate-500 hover:bg-slate-600 py-3 rounded-lg"
+          >
             <LogOut size={20} />
-
             Logout
-
           </button>
 
         </div>
@@ -175,16 +184,20 @@ const AdminLayout = () => {
 
             <div className="flex items-center gap-2">
 
-              <UserCircle size={30} className="text-blue-500" />
+              {user?.profilePic ? (
+                <img src={user.profilePic} alt="" className="w-8 h-8 rounded-full object-cover border border-blue-500" />
+              ) : (
+                <UserCircle size={30} className="text-blue-500" />
+              )}
 
               <div className="hidden sm:block">
 
                 <p className="font-medium">
-                  Admin
+                  {user?.username || "Admin"}
                 </p>
 
                 <p className="text-xs text-slate-400">
-                  admin@shophub.com
+                  {user?.email || "admin@shophub.com"}
                 </p>
 
               </div>
