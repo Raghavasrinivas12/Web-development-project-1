@@ -30,6 +30,8 @@ import AdminUsers from "./pages/admin/AdminUsers"
 import ManageVendors from "./pages/admin/ManageVendors";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
+import ManageCategories from "./pages/admin/ManageCategories";
+import Reports from "./pages/admin/Reports";
 
 function App() {
   return (
@@ -80,7 +82,13 @@ function App() {
               <Route path="/admin/orders" element={<AdminLayout />}>
                 <Route index element={<AdminOrders />} />
               </Route>
-            </Route>
+              <Route path="/admin/categories" element={<AdminLayout />}>
+                <Route index element={<ManageCategories />} />
+              </Route>
+              <Route path="/admin/reports" element={<AdminLayout />}>
+                <Route index element={<Reports />} />
+              </Route>
+           </Route> 
               
             </Routes>
           </WishlistProvider>
