@@ -28,6 +28,8 @@ import StoreSettings from "./pages/vendor/StoreSettings";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers"
 import ManageVendors from "./pages/admin/ManageVendors";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
 
 function App() {
   return (
@@ -44,7 +46,7 @@ function App() {
                 <Route path="wishlist" element={<Wishlist />} />
               </Route>
 
-              <Route element={<ProtectedRoute allowedRoles={["customer"]} />}>
+              <Route element={<ProtectedRoute allowedRoles={["customer", "superadmin", "vendor"]} />}>
                 <Route element={<UserLayout />}>
                   <Route path="profile" element={<Profile />} />
                   <Route path="cart" element={<Cart />} />
@@ -71,6 +73,12 @@ function App() {
               </Route>
               <Route path="/adminvendors" element={<AdminLayout />}>
                 <Route index element={<ManageVendors />} />
+              </Route>
+              <Route path="/admin/products" element={<AdminLayout />}>
+                <Route index element={<AdminProducts />} />
+              </Route>
+              <Route path="/admin/orders" element={<AdminLayout />}>
+                <Route index element={<AdminOrders />} />
               </Route>
             </Route>
               

@@ -29,6 +29,7 @@ app.use('/api/products',productRouter)
 app.use('/api/home',homeRouter)
 app.use('/api/payment',paymentRouter)
 app.use('/api/upload',uploadRouter)
+app.use('/api/admin',adminRouter)
 
 
 app.listen(PORT, () => {

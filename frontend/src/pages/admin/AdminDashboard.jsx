@@ -25,7 +25,7 @@ const AdminDashboard = () => {
 
   if (loading)
     return (
-      <div className="text-center text-slate-400 py-20">Loading dashboard...</div>
+      <div className="text-center text-slate-400 py-20 text-base">Loading dashboard...</div>
     );
 
   const statsCards = [
@@ -51,7 +51,7 @@ const AdminDashboard = () => {
           <h1 className="text-3xl font-bold text-white">Dashboard</h1>
           <p className="text-slate-400 mt-1">Welcome back, Admin</p>
         </div>
-        <button className="bg-blue-500 hover:bg-blue-600 px-5 py-3 rounded-lg font-medium">
+        <button className="bg-blue-500 hover:bg-blue-600 px-5 py-2.5 rounded-lg text-sm font-medium">
           Generate Report
         </button>
       </div>
@@ -61,8 +61,8 @@ const AdminDashboard = () => {
           <div key={index} className="bg-slate-900 rounded-xl p-6 border border-slate-800 hover:border-blue-500 transition">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-slate-400">{item.title}</p>
-                <h2 className="text-3xl font-bold mt-2 text-white">{item.value}</h2>
+                <p className="text-slate-400 text-sm">{item.title}</p>
+                <h2 className="text-3xl font-bold mt-1 text-white">{item.value}</h2>
               </div>
               <div className={item.color}>{item.icon}</div>
             </div>
@@ -74,7 +74,7 @@ const AdminDashboard = () => {
         <h2 className="text-2xl font-semibold mb-6">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {quickActions.map((action, index) => (
-            <button key={index} className="bg-slate-800 hover:bg-blue-500 transition rounded-xl p-5 flex flex-col items-center gap-3">
+            <button key={index} className="bg-slate-800 hover:bg-blue-500 transition rounded-xl py-5 flex flex-col items-center gap-3">
               {action.icon}
               <span className="text-sm">{action.title}</span>
             </button>
@@ -83,94 +83,27 @@ const AdminDashboard = () => {
       </div>
 
       <div className="bg-slate-900 rounded-xl p-6 border border-slate-800">
-        <div className="flex items-center gap-3 mb-6">
-          <Activity className="text-blue-500" />
-          <h2 className="text-2xl font-semibold">Recent Orders</h2>
+        <div className="flex items-center gap-3 mb-5">
+          <Activity className="text-blue-500" size={22} />
+          <h2 className="text-2xl font-semibold">Recent Activities</h2>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-slate-700 text-left">
-                <th className="py-3">Order ID</th>
-                <th>Customer</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.recentOrders?.map((order) => (
-                <tr key={order._id} className="border-b border-slate-800 hover:bg-slate-800">
-                  <td className="py-4 font-mono text-sm">{order._id.slice(-8)}</td>
-                  <td>{order.userId?.username || "N/A"}</td>
-                  <td>{formatCurrency(order.totalAmount)}</td>
-                  <td>
-                    <span className={`px-3 py-1 rounded-full text-sm ${
-                      order.orderStatus === "Delivered" ? "bg-green-500/20 text-green-400" :
-                      order.orderStatus === "Shipped" ? "bg-blue-500/20 text-blue-400" :
-                      order.orderStatus === "Paid" ? "bg-cyan-500/20 text-cyan-400" :
-                      order.orderStatus === "Pending" ? "bg-yellow-500/20 text-yellow-400" :
-                      "bg-red-500/20 text-red-400"
-                    }`}>
-                      {order.orderStatus}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {(!data?.recentOrders || data.recentOrders.length === 0) && (
-                <tr><td colSpan={4} className="py-8 text-center text-slate-500">No orders yet</td></tr>
-              )}
-            </tbody>
-          </table>
+        <div className="space-y-4">
+          {[
+            "New vendor 'Tech World' registered.",
+            "25 new orders received today.",
+            "Admin approved 3 vendors.",
+            "10 products added today.",
+            "Revenue increased by 18% this month.",
+          ].map((activity, index) => (
+            <div key={index} className="bg-slate-800 rounded-lg p-4 flex items-center gap-3">
+              <div className="w-3 h-3 rounded-full bg-blue-500 shrink-0" />
+              <p className="text-slate-200 text-sm">{activity}</p>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="bg-slate-900 rounded-xl p-6 border border-slate-800">
-          <h2 className="text-2xl font-semibold mb-5">Recent Vendors</h2>
-          <div className="space-y-4">
-            {data?.vendorStats?.map((store) => (
-              <div key={store._id} className="bg-slate-800 rounded-lg p-4 flex justify-between">
-                <div>
-                  <h3 className="font-semibold">{store.storeName}</h3>
-                  <p className="text-slate-400 text-sm">{store.ownerId?.username || "N/A"}</p>
-                </div>
-                <span className={`text-sm font-semibold ${
-                  store.isApproved === "Approved" ? "text-green-400" :
-                  store.isApproved === "Rejected" ? "text-red-400" :
-                  "text-yellow-400"
-                }`}>{store.isApproved || "Pending"}</span>
-              </div>
-            ))}
-            {(!data?.vendorStats || data.vendorStats.length === 0) && (
-              <p className="text-center text-slate-500 py-8">No vendors yet</p>
-            )}
-          </div>
-        </div>
-
-        <div className="bg-slate-900 rounded-xl p-6 border border-slate-800">
-          <h2 className="text-2xl font-semibold mb-5">Sales Overview</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-800 rounded-lg p-5">
-              <p className="text-slate-400">Today</p>
-              <h3 className="text-2xl font-bold text-green-400 mt-2">{formatCurrency(0)}</h3>
-            </div>
-            <div className="bg-slate-800 rounded-lg p-5">
-              <p className="text-slate-400">This Week</p>
-              <h3 className="text-2xl font-bold text-blue-400 mt-2">{formatCurrency(0)}</h3>
-            </div>
-            <div className="bg-slate-800 rounded-lg p-5">
-              <p className="text-slate-400">Total Revenue</p>
-              <h3 className="text-2xl font-bold text-yellow-400 mt-2">{formatCurrency(data?.stats?.totalRevenue ?? 0)}</h3>
-            </div>
-            <div className="bg-slate-800 rounded-lg p-5">
-              <p className="text-slate-400">Orders</p>
-              <h3 className="text-2xl font-bold text-cyan-400 mt-2">{data?.stats?.totalOrders ?? 0}</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="text-center text-slate-500 pt-8 border-t border-slate-800">
+      <div className="text-center text-slate-500 pt-8 border-t border-slate-800 text-sm">
         &copy; 2026 ShopHub Admin Dashboard. All Rights Reserved.
       </div>
     </div>
