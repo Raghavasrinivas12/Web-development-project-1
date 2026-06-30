@@ -53,7 +53,10 @@ export default function Register() {
         form
       );
       login(res.data.user, res.data.token);
-      navigate("/");
+      const role = res.data.user?.role;
+      if (role === "superadmin") navigate("/admindashboard");
+      else if (role === "vendor") navigate("/vendor/dashboard");
+      else navigate("/");
     } catch (err) {
       console.error(err);
       alert("Registration Failed");
@@ -66,7 +69,7 @@ export default function Register() {
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col md:flex-row md:h-145"
+        className="relative w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden flex flex-col md:flex-row md:h-180"
       >
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
