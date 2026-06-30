@@ -116,7 +116,7 @@ const AdminLayout = () => {
         <div className="absolute bottom-4 left-0 w-full px-2">
           <button
             onClick={handleLogout}
-            className={`w-full flex items-center justify-center bg-slate-700 hover:bg-red-600 py-2.5 rounded-lg transition ${expanded ? "gap-2" : "gap-0"}`}
+            className={`w-full flex items-center justify-center bg-slate-700 hover:bg-slate-600 py-2.5 rounded-lg transition ${expanded ? "gap-2" : "gap-0"}`}
             title={!expanded ? "Logout" : undefined}
           >
             <LogOut size={18} className="shrink-0" />
