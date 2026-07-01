@@ -20,6 +20,7 @@ import Cart from "./pages/customer/Cart";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import ManageProducts from "./pages/vendor/ManageProducts";
 import StoreSettings from "./pages/vendor/StoreSettings";
+import Checkout from "./pages/public/Checkout";
 // import Checkout from "./pages/public/Checkout";
 // import PaymentSuccess from "./pages/public/PaymentSuccess"
 
@@ -38,7 +39,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/wishlist" element={<Wishlist />} />
-                {/* <Route path="checkout" element={<Checkout />} /> */}
+                <Route path="checkout" element={<Checkout />} />
                 {/* <Route path="payment-success" element={<PaymentSuccess />} /> */}
               </Route>
 

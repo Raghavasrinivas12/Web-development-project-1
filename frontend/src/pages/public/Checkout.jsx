@@ -8,7 +8,7 @@ import { ArrowLeft, CreditCard } from "lucide-react";
 import axios from "axios";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
-
+console.log("checkout",import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
 function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
