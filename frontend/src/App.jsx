@@ -32,6 +32,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 import ManageCategories from "./pages/admin/ManageCategories";
 import Reports from "./pages/admin/Reports";
+import AdminSettings from "./pages/admin/AdminSettings"
 
 function App() {
   return (
@@ -66,7 +67,7 @@ function App() {
                 </Route>
               </Route>
               
-            <Route element={<ProtectedRoute allowedRoles={["superadmin"]} />}>
+           <Route element={<ProtectedRoute allowedRoles={["superadmin"]} />}>
               <Route path="/admindashboard" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
               </Route>
@@ -88,7 +89,10 @@ function App() {
               <Route path="/admin/reports" element={<AdminLayout />}>
                 <Route index element={<Reports />} />
               </Route>
-           </Route> 
+              <Route path="/admin/settings" element={<AdminLayout />}>
+                <Route index element={<AdminSettings />} />
+              </Route>
+          </Route> 
               
             </Routes>
           </WishlistProvider>
