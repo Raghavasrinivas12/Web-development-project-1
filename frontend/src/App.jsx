@@ -33,6 +33,7 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import ManageCategories from "./pages/admin/ManageCategories";
 import Reports from "./pages/admin/Reports";
 import AdminSettings from "./pages/admin/AdminSettings"
+import AdminProfile from "./pages/admin/AdminProfile";
 
 function App() {
   return (
@@ -92,7 +93,10 @@ function App() {
               <Route path="/admin/settings" element={<AdminLayout />}>
                 <Route index element={<AdminSettings />} />
               </Route>
-          </Route> 
+              <Route path="/admin/profile" element={<AdminLayout />}>
+                <Route index element={<AdminProfile />} />
+              </Route>
+         </Route>
               
             </Routes>
           </WishlistProvider>
