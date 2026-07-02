@@ -111,11 +111,49 @@ const CategorySchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
+// SETTINGS SCHEMA
+const SettingsSchema = new mongoose.Schema({
+  storeName: { type: String, default: 'ShopHub' },
+  supportEmail: { type: String, default: 'support@shophub.com' },
+  supportPhone: { type: String, default: '+91 9876543210' },
+  gstNumber: { type: String, default: '' },
+  address: { type: String, default: 'Bengaluru, Karnataka' },
+  logo: { type: String, default: '' },
+  currency: { type: String, default: '₹ INR' },
+  language: { type: String, default: 'English' },
+  timeZone: { type: String, default: 'Asia/Kolkata' },
+  taxPercentage: { type: Number, default: 18 },
+  emailNotifications: { type: Boolean, default: true },
+  orderNotifications: { type: Boolean, default: true },
+  vendorAlerts: { type: Boolean, default: true },
+  lowStockAlerts: { type: Boolean, default: false },
+  pushNotifications: { type: Boolean, default: true },
+  darkMode: { type: Boolean, default: true },
+  compactSidebar: { type: Boolean, default: false },
+  enableAnimations: { type: Boolean, default: true },
+  aboutUs: { type: String, default: '' },
+  contactUs: { type: String, default: '' },
+  privacyPolicy: { type: String, default: '' },
+  termsConditions: { type: String, default: '' },
+  shippingPolicy: { type: String, default: '' },
+  returnRefundPolicy: { type: String, default: '' },
+  faq: { type: String, default: '' },
+}, { timestamps: true });
+
+// ACTIVITY LOG SCHEMA
+const ActivityLogSchema = new mongoose.Schema({
+  action: { type: String, required: true },
+  details: { type: String },
+  performedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+}, { timestamps: true });
+
 const User = mongoose.model('User', UserSchema);
 const Store = mongoose.model('Store', StoreSchema);
 const Product = mongoose.model('Product', ProductSchema);
 const Order = mongoose.model('Order', OrderSchema);
 const Banner = mongoose.model('Banner', BannerSchema);
 const Category = mongoose.model('Category', CategorySchema);
+const Settings = mongoose.model('Settings', SettingsSchema);
+const ActivityLog = mongoose.model('ActivityLog', ActivityLogSchema);
 
-module.exports = { User, Store, Product, Order, Banner, Category };
+module.exports = { User, Store, Product, Order, Banner, Category, Settings, ActivityLog };
