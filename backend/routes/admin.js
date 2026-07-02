@@ -1,8 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const { Product, Order, User, Store, Category, Settings } = require('../db/db');
+const bcrypt = require('bcrypt');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { Product, Order, User, Store, Category, Settings, ActivityLog } = require('../db/db');
 const authMiddleware = require('../middleware/authMiddleware');
 const { restrictTo } = require('../middleware/roleMiddleware');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files are allowed'), false);
+  },
+});
+
+async function logActivity(action, details, userId) {
+  try {
+    await ActivityLog.create({ action, details, performedBy: userId });
+  } catch (_) {}
+}
 
 router.use(authMiddleware, restrictTo('superadmin'));
 
@@ -376,6 +400,155 @@ router.put('/settings', async (req, res) => {
     return res.json({ settings });
   } catch (err) {
     return res.status(500).json({ msg: 'Failed to save settings' });
+  }
+});
+
+// ── Logo Upload ──
+router.post('/settings/logo', upload.single('logo'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ msg: 'No image file provided' });
+    }
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'shophub/logo', public_id: 'store_logo', overwrite: true },
+        (err, result) => {
+          if (err) reject(err);
+          else resolve(result);
+        }
+      );
+      stream.end(req.file.buffer);
+    });
+    let settings = await Settings.findOne();
+    if (!settings) settings = new Settings();
+    settings.logo = result.secure_url;
+    await settings.save();
+    logActivity('Logo updated', 'Store logo was changed', req.user.userid);
+    return res.json({ url: result.secure_url });
+  } catch (err) {
+    console.error('Logo upload error:', err);
+    return res.status(500).json({ msg: 'Logo upload failed' });
+  }
+});
+
+// ── Change Password ──
+router.put('/settings/password', async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ msg: 'Both current and new password are required' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ msg: 'New password must be at least 6 characters' });
+    }
+    const admin = await User.findById(req.user.userid);
+    if (!admin) return res.status(404).json({ msg: 'Admin not found' });
+    const isMatch = await bcrypt.compare(currentPassword, admin.passwordHash);
+    if (!isMatch) return res.status(401).json({ msg: 'Current password is incorrect' });
+    const saltRounds = 10;
+    admin.passwordHash = await bcrypt.hash(newPassword, saltRounds);
+    await admin.save();
+    logActivity('Password changed', 'Admin password was updated', req.user.userid);
+    return res.json({ msg: 'Password updated successfully' });
+  } catch (err) {
+    console.error('Password change error:', err);
+    return res.status(500).json({ msg: 'Failed to change password' });
+  }
+});
+
+// ── Save Content Page ──
+router.put('/settings/content', async (req, res) => {
+  try {
+    const { page, content } = req.body;
+    const validPages = ['aboutUs', 'contactUs', 'privacyPolicy', 'termsConditions', 'shippingPolicy', 'returnRefundPolicy', 'faq'];
+    if (!validPages.includes(page)) {
+      return res.status(400).json({ msg: 'Invalid page name' });
+    }
+    let settings = await Settings.findOne();
+    if (!settings) settings = new Settings();
+    settings[page] = content;
+    await settings.save();
+    logActivity(`${page} edited`, `${page} content was updated`, req.user.userid);
+    return res.json({ msg: `${page} updated successfully` });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Failed to save content' });
+  }
+});
+
+// ── Backup ──
+router.get('/backup', async (req, res) => {
+  try {
+    const [users, stores, products, orders, banners, categories, settings, activityLogs] = await Promise.all([
+      User.find().lean(),
+      Store.find().lean(),
+      Product.find().lean(),
+      Order.find().lean(),
+      Banner.find().lean(),
+      Category.find().lean(),
+      Settings.find().lean(),
+      ActivityLog.find().lean(),
+    ]);
+    logActivity('Backup downloaded', 'Full database backup was downloaded', req.user.userid);
+    return res.json({
+      exportedAt: new Date().toISOString(),
+      data: { users, stores, products, orders, banners, categories, settings, activityLogs },
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Failed to generate backup' });
+  }
+});
+
+router.post('/backup/restore', async (req, res) => {
+  try {
+    const { data } = req.body;
+    if (!data) return res.status(400).json({ msg: 'No backup data provided' });
+    const collections = [
+      { name: 'User', model: User },
+      { name: 'Store', model: Store },
+      { name: 'Product', model: Product },
+      { name: 'Order', model: Order },
+      { name: 'Banner', model: Banner },
+      { name: 'Category', model: Category },
+      { name: 'Settings', model: Settings },
+      { name: 'ActivityLog', model: ActivityLog },
+    ];
+    for (const { name, model } of collections) {
+      const key = name.charAt(0).toLowerCase() + name.slice(1) + 's';
+      if (data[key] && Array.isArray(data[key])) {
+        await model.deleteMany({});
+        if (data[key].length > 0) {
+          await model.insertMany(data[key]);
+        }
+      }
+    }
+    logActivity('Backup restored', 'Database was restored from backup', req.user.userid);
+    return res.json({ msg: 'Backup restored successfully' });
+  } catch (err) {
+    console.error('Restore error:', err);
+    return res.status(500).json({ msg: 'Failed to restore backup' });
+  }
+});
+
+// ── Clear Cache ──
+router.post('/clear-cache', async (req, res) => {
+  try {
+    logActivity('Cache cleared', 'System cache was cleared', req.user.userid);
+    return res.json({ msg: 'Cache cleared successfully' });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Failed to clear cache' });
+  }
+});
+
+// ── Activity Logs ──
+router.get('/activity-logs', async (req, res) => {
+  try {
+    const logs = await ActivityLog.find()
+      .populate('performedBy', 'username')
+      .sort({ createdAt: -1 })
+      .limit(50);
+    return res.json({ logs });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Failed to fetch activity logs' });
   }
 });
 

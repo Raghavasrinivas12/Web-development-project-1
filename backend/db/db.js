@@ -118,6 +118,7 @@ const SettingsSchema = new mongoose.Schema({
   supportPhone: { type: String, default: '+91 9876543210' },
   gstNumber: { type: String, default: '' },
   address: { type: String, default: 'Bengaluru, Karnataka' },
+  logo: { type: String, default: '' },
   currency: { type: String, default: '₹ INR' },
   language: { type: String, default: 'English' },
   timeZone: { type: String, default: 'Asia/Kolkata' },
@@ -130,6 +131,20 @@ const SettingsSchema = new mongoose.Schema({
   darkMode: { type: Boolean, default: true },
   compactSidebar: { type: Boolean, default: false },
   enableAnimations: { type: Boolean, default: true },
+  aboutUs: { type: String, default: '' },
+  contactUs: { type: String, default: '' },
+  privacyPolicy: { type: String, default: '' },
+  termsConditions: { type: String, default: '' },
+  shippingPolicy: { type: String, default: '' },
+  returnRefundPolicy: { type: String, default: '' },
+  faq: { type: String, default: '' },
+}, { timestamps: true });
+
+// ACTIVITY LOG SCHEMA
+const ActivityLogSchema = new mongoose.Schema({
+  action: { type: String, required: true },
+  details: { type: String },
+  performedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
@@ -139,5 +154,6 @@ const Order = mongoose.model('Order', OrderSchema);
 const Banner = mongoose.model('Banner', BannerSchema);
 const Category = mongoose.model('Category', CategorySchema);
 const Settings = mongoose.model('Settings', SettingsSchema);
+const ActivityLog = mongoose.model('ActivityLog', ActivityLogSchema);
 
-module.exports = { User, Store, Product, Order, Banner, Category, Settings };
+module.exports = { User, Store, Product, Order, Banner, Category, Settings, ActivityLog };
