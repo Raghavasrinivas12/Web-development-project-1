@@ -62,6 +62,15 @@ const AdminSettings = () => {
   const token = () => localStorage.getItem("token");
   const headers = () => ({ headers: { Authorization: `Bearer ${token()}` } });
 
+  const syncAppearance = () => {
+    localStorage.setItem("admin_appearance", JSON.stringify({ darkMode, compactSidebar, enableAnimations }));
+    window.dispatchEvent(new Event("storage"));
+  };
+
+  useEffect(() => {
+    syncAppearance();
+  }, [darkMode, compactSidebar, enableAnimations]);
+
   useEffect(() => {
     axios.get("/api/admin/settings", headers())
       .then((res) => {
