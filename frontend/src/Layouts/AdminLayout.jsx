@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -12,23 +12,7 @@ const AdminLayout = () => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
-
-  const saved = JSON.parse(localStorage.getItem("admin_appearance") || "{}");
-  const [compactSidebar, _setCompactSidebar] = useState(saved.compactSidebar ?? false);
-  const [enableAnimations, _setEnableAnimations] = useState(saved.enableAnimations ?? true);
-
-  useEffect(() => {
-    const onStorage = () => {
-      const s = JSON.parse(localStorage.getItem("admin_appearance") || "{}");
-      _setCompactSidebar(s.compactSidebar ?? false);
-      _setEnableAnimations(s.enableAnimations ?? true);
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
-
-  const expanded = compactSidebar ? false : (sidebarExpanded || sidebarOpen);
-  const noAnim = !enableAnimations;
+  const expanded = sidebarExpanded || sidebarOpen;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -48,8 +32,7 @@ const AdminLayout = () => {
   ];
 
   return (
-    <div className={`min-h-screen bg-slate-950 text-white ${noAnim ? "no-animations" : ""}`}
-      data-theme={saved.darkMode ?? true ? "dark" : "light"}>
+    <div className="min-h-screen bg-slate-950 text-white">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/60 z-10 lg:hidden" onClick={() => setSidebarOpen(false)} />
@@ -76,10 +59,10 @@ const AdminLayout = () => {
 
       {/* Sidebar — below top bar */}
       <aside
-        onMouseEnter={() => !compactSidebar && setSidebarExpanded(true)}
-        onMouseLeave={() => !compactSidebar && setSidebarExpanded(false)}
+        onMouseEnter={() => setSidebarExpanded(true)}
+        onMouseLeave={() => setSidebarExpanded(false)}
         className={`fixed top-14 left-0 z-20 h-[calc(100vh-3.5rem)] ${expanded ? "w-64" : "w-16"}
-          bg-slate-900 border-r border-slate-800 ${noAnim ? "" : "transition-all duration-200"} overflow-hidden
+          bg-slate-900 border-r border-slate-800 transition-all duration-200 overflow-hidden
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
         {/* Close button */}
@@ -145,7 +128,7 @@ const AdminLayout = () => {
       </aside>
 
       {/* Main Content — offset for top bar + sidebar */}
-      <div className={`pt-14 ${noAnim ? "" : "transition-all duration-200"} min-h-screen ${expanded ? "lg:ml-64" : "lg:ml-16"} ml-0`}>
+      <div className={`pt-14 transition-all duration-200 min-h-screen ${sidebarExpanded ? "lg:ml-64" : "lg:ml-16"} ml-0`}>
         <main className="p-6">
           <Outlet />
         </main>
