@@ -111,11 +111,33 @@ const CategorySchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
+// SETTINGS SCHEMA
+const SettingsSchema = new mongoose.Schema({
+  storeName: { type: String, default: 'ShopHub' },
+  supportEmail: { type: String, default: 'support@shophub.com' },
+  supportPhone: { type: String, default: '+91 9876543210' },
+  gstNumber: { type: String, default: '' },
+  address: { type: String, default: 'Bengaluru, Karnataka' },
+  currency: { type: String, default: '₹ INR' },
+  language: { type: String, default: 'English' },
+  timeZone: { type: String, default: 'Asia/Kolkata' },
+  taxPercentage: { type: Number, default: 18 },
+  emailNotifications: { type: Boolean, default: true },
+  orderNotifications: { type: Boolean, default: true },
+  vendorAlerts: { type: Boolean, default: true },
+  lowStockAlerts: { type: Boolean, default: false },
+  pushNotifications: { type: Boolean, default: true },
+  darkMode: { type: Boolean, default: true },
+  compactSidebar: { type: Boolean, default: false },
+  enableAnimations: { type: Boolean, default: true },
+}, { timestamps: true });
+
 const User = mongoose.model('User', UserSchema);
 const Store = mongoose.model('Store', StoreSchema);
 const Product = mongoose.model('Product', ProductSchema);
 const Order = mongoose.model('Order', OrderSchema);
 const Banner = mongoose.model('Banner', BannerSchema);
 const Category = mongoose.model('Category', CategorySchema);
+const Settings = mongoose.model('Settings', SettingsSchema);
 
-module.exports = { User, Store, Product, Order, Banner, Category };
+module.exports = { User, Store, Product, Order, Banner, Category, Settings };
