@@ -5,7 +5,7 @@ const VendorDashboard = () => {
   
   const stats = [
     { title: "Total Revenue", value: `₹${rawRevenue.toLocaleString('en-IN')}`, change: "+12.5% vs last week", color: "text-emerald-400" },
-    { title: "Active Listings", value: "18 Items", change: "In stock and live", color: "text-rose-500" },
+    { title: "Active Listings", value: "18 Items", change: "In stock and live", color: "text-blue-500" },
     { title: "Pending Orders", value: "4 Orders", change: "Requires dispatch action", color: "text-amber-400" },
   ];
 

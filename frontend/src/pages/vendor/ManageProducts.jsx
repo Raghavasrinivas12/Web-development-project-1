@@ -20,7 +20,7 @@ const ManageProducts = () => {
           <h1 className="text-3xl font-bold text-white tracking-tight">Manage Products</h1>
           <p className="text-slate-400 mt-1">Configure item pricing setups, variations, and active quantities.</p>
         </div>
-        <button className="bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-lg shadow-rose-600/10 transition dynamic context text-sm cursor-pointer">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl shadow-lg shadow-blue-600/10 transition dynamic context text-sm cursor-pointer">
           + Add New Product
         </button>
       </div>
@@ -40,7 +40,7 @@ const ManageProducts = () => {
             {products.map((product) => (
               <tr key={product.id} className="hover:bg-slate-800/30 transition-colors">
                 <td className="p-4 font-semibold text-white">{product.title}</td>
-                <td className="p-4 font-medium text-rose-400">₹{product.price.toLocaleString('en-IN')}</td>
+                <td className="p-4 font-medium text-blue-400">₹{product.price.toLocaleString('en-IN')}</td>
                 <td className="p-4">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStockBadge(product.stock)}`}>
                     {product.stock === 0 ? "Out of Stock" : `${product.stock} units left`}
