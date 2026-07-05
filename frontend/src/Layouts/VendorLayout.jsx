@@ -1,16 +1,41 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import {Settings,Gift,Receipt} from "lucide-react";
+import {Settings,Gift,Receipt,Menu,X} from "lucide-react";
 import {  useAuth} from '../context/AuthContext';
-
+import { useState } from 'react';
 const VendorLayout = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const [sidebarOpen,setSidebarOpen]=useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans">
+    <div className="flex h-screen bg-slate-950 font-sans relative">
+      {/* Mobile Header */}
+
+<div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 flex items-center justify-between px-4 z-50 shadow-lg">
+
+    <button
+        onClick={() => setSidebarOpen(true)}
+    >
+        <Menu size={28} className="text-white hover:text-blue-400" />
+    </button>
+
+    <h1 className="text-xl font-bold text-blue-500">
+        ZAALIMA
+    </h1>
+
+</div>
       {/* Fixed Admin Sidebar */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col justify-between p-6 shadow-xl">
+      <aside className={`fixed lg:static top-0 left-0 h-full w-64 bg-slate-900 text-white flex flex-col justify-between p-6 shadow-xl z-50 transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" :"-translate-x-full"} lg:translate-x-0`}>
         <div>
+          <div className="flex justify-end lg:hidden mb-4">
+
+    <button
+        onClick={() => setSidebarOpen(false)}
+    >
+        <X size={28} className='text-white  hover:text-blue-400'/>
+    </button>
+
+</div>
           <div className="text-2xl font-bold tracking-wider text-blue-500 mb-8 border-b border-slate-700 pb-4">
             ZAALIMA <span className="text-white text-sm block tracking-normal font-normal opacity-60">Vendor Core</span>
           </div>
@@ -27,6 +52,12 @@ const VendorLayout = () => {
             
               <Settings size={20}/>
               <span>Store Settings</span>
+              
+            </Link>
+            <Link to="/vendor/dashboard/orders" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
+            
+              <Settings size={20}/>
+              <span>Manage Orders</span>
               
             </Link>
           </nav>
