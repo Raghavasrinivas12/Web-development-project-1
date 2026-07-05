@@ -34,6 +34,7 @@ import ManageCategories from "./pages/admin/ManageCategories";
 import Reports from "./pages/admin/Reports";
 import AdminSettings from "./pages/admin/AdminSettings"
 import AdminProfile from "./pages/admin/AdminProfile";
+import VendorOrders from "./pages/vendor/VendorOrders";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
                   <Route index element={<VendorDashboard />} />
                   <Route path="products" element={<ManageProducts />} />
                   <Route path="settings" element={<StoreSettings />} />
+                  <Route path="orders" element={<VendorOrders />} />
                 </Route>
               </Route>
               
