@@ -79,7 +79,7 @@ const StoreSettings = () => {
             </div>
 
             <div className="border-t border-slate-800 pt-6 flex justify-end">
-              <button type="submit" className="bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2.5 px-6 rounded-xl text-sm shadow-md transition cursor-pointer">
+              <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-xl text-sm shadow-md transition cursor-pointer">
                 Save Configuration Settings
               </button>
             </div>

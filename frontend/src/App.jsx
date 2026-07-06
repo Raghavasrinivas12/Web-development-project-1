@@ -33,6 +33,9 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import ManageCategories from "./pages/admin/ManageCategories";
 import Reports from "./pages/admin/Reports";
 import AdminSettings from "./pages/admin/AdminSettings"
+import AdminProfile from "./pages/admin/AdminProfile";
+import VendorOrders from "./pages/vendor/VendorOrders";
+import VendorSales from "./pages/vendor/VendorSales";
 
 function App() {
   return (
@@ -64,6 +67,8 @@ function App() {
                   <Route index element={<VendorDashboard />} />
                   <Route path="products" element={<ManageProducts />} />
                   <Route path="settings" element={<StoreSettings />} />
+                  <Route path="orders" element={<VendorOrders />} />
+                  <Route path="sales" element={<VendorSales />} />
                 </Route>
               </Route>
               
@@ -92,7 +97,10 @@ function App() {
               <Route path="/admin/settings" element={<AdminLayout />}>
                 <Route index element={<AdminSettings />} />
               </Route>
-          </Route> 
+              <Route path="/admin/profile" element={<AdminLayout />}>
+                <Route index element={<AdminProfile />} />
+              </Route>
+         </Route>
               
             </Routes>
           </WishlistProvider>
