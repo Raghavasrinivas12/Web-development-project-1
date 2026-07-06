@@ -36,6 +36,7 @@ import AdminSettings from "./pages/admin/AdminSettings"
 import AdminProfile from "./pages/admin/AdminProfile";
 import VendorOrders from "./pages/vendor/VendorOrders";
 import VendorSales from "./pages/vendor/VendorSales";
+import VendorProfile from "./pages/vendor/VendorProfile";
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
                   <Route path="settings" element={<StoreSettings />} />
                   <Route path="orders" element={<VendorOrders />} />
                   <Route path="sales" element={<VendorSales />} />
+                  <Route path="profile" element={<VendorProfile />} />
                 </Route>
               </Route>
               
