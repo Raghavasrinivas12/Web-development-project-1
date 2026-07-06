@@ -48,7 +48,10 @@ export default function Signin() {
         form
       );
       login(res.data.user, res.data.token);
-      navigate("/");
+      const role = res.data.user?.role;
+      if (role === "superadmin") navigate("/admindashboard");
+      else if (role === "vendor") navigate("/vendor/dashboard");
+      else navigate("/");
     } catch (err) {
       console.error(err);
       alert("Login Failed");

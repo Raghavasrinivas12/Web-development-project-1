@@ -1,16 +1,18 @@
-import { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { token, user } = useAuth();
 
-  // If no token exists, send them back to the login page
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  // If roles are specified and user doesn't match, bounce them to the home marketplace
+  // user is still loading from localStorage — wait
+  if (!user) {
+    return <div className="h-screen flex items-center justify-center bg-slate-950"><div className="text-slate-400 text-sm">Loading...</div></div>;
+  }
+
   if (allowedRoles && !allowedRoles.includes(user?.role)) {
     return <Navigate to="/" replace />;
   }

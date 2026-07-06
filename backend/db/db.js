@@ -1,8 +1,11 @@
 const mongoose=require('mongoose');
 require('dotenv').config();
-
+console.log("Mongo URL:", process.env.MONGODB_URL);
 mongoose.connect(
-  `${process.env.MONGODB_URL}`
+  `${process.env.MONGODB_URL}`,
+   {
+    family: 4
+  }
 )
 .then(() => {
   console.log('Connected to MongoDB');
@@ -34,7 +37,8 @@ const StoreSchema = new mongoose.Schema({
   },
   storeName: { type: String, required: true, unique: true, trim: true },
   description: { type: String },
-  logoUrl: { type: String }
+  logoUrl: { type: String },
+  isApproved: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' }
 }, { timestamps: true });
 
 
