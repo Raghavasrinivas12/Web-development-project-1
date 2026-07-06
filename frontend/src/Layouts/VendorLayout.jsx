@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import {Settings,Gift,Receipt,Menu,X} from "lucide-react";
+import {Settings,Gift,Receipt,Menu,X,ShoppingCart,ChartColumn} from "lucide-react";
 import {  useAuth} from '../context/AuthContext';
 import { useState } from 'react';
 const VendorLayout = () => {
@@ -56,8 +56,14 @@ const VendorLayout = () => {
             </Link>
             <Link to="/vendor/dashboard/orders" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
             
-              <Settings size={20}/>
+              <ShoppingCart size={20}/>
               <span>Manage Orders</span>
+              
+            </Link>
+             <Link to="/vendor/dashboard/sales" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
+            
+              <ChartColumn size={20}/>
+              <span>Manage Sales</span>
               
             </Link>
           </nav>
