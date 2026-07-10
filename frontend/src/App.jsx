@@ -37,6 +37,8 @@ import AdminProfile from "./pages/admin/AdminProfile";
 import VendorOrders from "./pages/vendor/VendorOrders";
 import VendorSales from "./pages/vendor/VendorSales";
 import VendorProfile from "./pages/vendor/VendorProfile";
+import VendorReviews from "./pages/vendor/VendorReviews";
+import VendorInventory from "./pages/vendor/VendorInventory";
 
 function App() {
   return (
@@ -71,6 +73,8 @@ function App() {
                   <Route path="orders" element={<VendorOrders />} />
                   <Route path="sales" element={<VendorSales />} />
                   <Route path="profile" element={<VendorProfile />} />
+                  <Route path="inventory" element={<VendorInventory />} />
+                  <Route path="reviews" element={<VendorReviews />} />
                 </Route>
               </Route>
               
