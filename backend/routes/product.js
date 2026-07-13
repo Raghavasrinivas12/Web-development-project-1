@@ -49,12 +49,15 @@ router.post('/', authMiddleware, restrictTo('vendor'), validateBody(productCheck
 });
 
 
-// FETCH ALL PRODUCTS
+// FETCH ALL PRODUCTS (optional ?category=, ?storeId=)
 router.get('/', async (req, res) => {
   try {
     const filter = {};
     if (req.query.category) {
       filter.category = new RegExp(req.query.category, 'i');
+    }
+    if (req.query.storeId) {
+      filter.storeId = req.query.storeId;
     }
 
     const products = await Product.find(filter)
