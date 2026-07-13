@@ -172,59 +172,63 @@ export default function Products() {
                 key={product._id}
                 className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all duration-200"
               >
-                <div className="relative">
-                  <img
-                    src={getImage(product)}
-                    alt={product.title}
-                    className="h-48 w-full object-cover"
-                  />
-                  <button
-                    onClick={() => toggleItem(product)}
-                    className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-900/80 flex items-center justify-center hover:bg-slate-800 transition"
-                  >
-                    <Heart
-                      size={16}
-                      className={
-                        isWishlisted(product._id)
-                          ? "fill-red-500 text-red-500"
-                          : "text-white"
-                      }
+                <Link to={`/product/${product._id}`}>
+                  <div className="relative">
+                    <img
+                      src={getImage(product)}
+                      alt={product.title}
+                      className="h-48 w-full object-cover"
                     />
-                  </button>
-                </div>
-
-                <div className="p-4">
-                  {product.storeId && (
-                    <p className="text-xs text-slate-500 mb-1">
-                      {product.storeId.storeName || "Store"}
-                    </p>
-                  )}
-
-                  <h3 className="text-white font-semibold text-base leading-tight mb-1">
-                    {product.title}
-                  </h3>
-
-                  {product.description && (
-                    <p className="text-slate-400 text-sm line-clamp-2 mb-3">
-                      {product.description}
-                    </p>
-                  )}
-
-                  <div className="flex items-center justify-between">
-                    <p className="text-blue-500 font-bold text-lg">
-                      ₹{product.price?.toLocaleString()}
-                    </p>
-
-                    <span className="text-xs text-slate-500">
-                      {product.stockQuantity > 0
-                        ? product.stockQuantity + " left"
-                        : "Out of stock"}
-                    </span>
+                    <button
+                      onClick={(e) => { e.preventDefault(); toggleItem(product); }}
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-900/80 flex items-center justify-center hover:bg-slate-800 transition"
+                    >
+                      <Heart
+                        size={16}
+                        className={
+                          isWishlisted(product._id)
+                            ? "fill-red-500 text-red-500"
+                            : "text-white"
+                        }
+                      />
+                    </button>
                   </div>
 
+                  <div className="p-4 pb-0">
+                    {product.storeId && (
+                      <p className="text-xs text-slate-500 mb-1">
+                        {product.storeId.storeName || "Store"}
+                      </p>
+                    )}
+
+                    <h3 className="text-white font-semibold text-base leading-tight mb-1">
+                      {product.title}
+                    </h3>
+
+                    {product.description && (
+                      <p className="text-slate-400 text-sm line-clamp-2 mb-3">
+                        {product.description}
+                      </p>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <p className="text-blue-500 font-bold text-lg">
+                        ₹{product.price?.toLocaleString()}
+                      </p>
+
+                      <span className="text-xs text-slate-500">
+                        {product.stockQuantity > 0
+                          ? product.stockQuantity + " left"
+                          : "Out of stock"}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+
+                <div className="p-4 pt-3">
                   <button
                     onClick={() => addItem(product)}
-                    className="mt-3 w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors duration-200"
+                    className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition-colors duration-200"
                   >
                     <ShoppingCart size={16} />
                     {items.find((i) => i._id === product._id)

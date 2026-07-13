@@ -149,6 +149,24 @@ const ActivityLogSchema = new mongoose.Schema({
   performedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
+// REVIEW SCHEMA
+const ReviewSchema = new mongoose.Schema({
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  comment: { type: String, required: true },
+  vendorReply: { type: String, default: '' },
+}, { timestamps: true });
+
+// NOTIFICATION SCHEMA
+const NotificationSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  message: { type: String, default: '' },
+  type: { type: String, enum: ['order', 'vendor', 'product', 'system'], default: 'system' },
+  isRead: { type: Boolean, default: false },
+  link: { type: String, default: '' },
+}, { timestamps: true });
+
 const User = mongoose.model('User', UserSchema);
 const Store = mongoose.model('Store', StoreSchema);
 const Product = mongoose.model('Product', ProductSchema);
@@ -157,5 +175,7 @@ const Banner = mongoose.model('Banner', BannerSchema);
 const Category = mongoose.model('Category', CategorySchema);
 const Settings = mongoose.model('Settings', SettingsSchema);
 const ActivityLog = mongoose.model('ActivityLog', ActivityLogSchema);
+const Review = mongoose.model('Review', ReviewSchema);
+const Notification = mongoose.model('Notification', NotificationSchema);
 
-module.exports = { User, Store, Product, Order, Banner, Category, Settings, ActivityLog };
+module.exports = { User, Store, Product, Order, Banner, Category, Settings, ActivityLog, Review, Notification };

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { ShoppingCart, Star, Heart } from "lucide-react";
@@ -47,11 +48,13 @@ const TrendingProducts = () => {
             className="bg-slate-900 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition"
           >
             <div className="relative">
-              <img
-                src={getImage(product)}
-                alt={product.title}
-                className="h-48 w-full object-cover"
-              />
+              <Link to={`/product/${product._id}`}>
+                <img
+                  src={getImage(product)}
+                  alt={product.title}
+                  className="h-48 w-full object-cover"
+                />
+              </Link>
               <button
                 onClick={() => toggleItem(product)}
                 className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-900/80 flex items-center justify-center hover:bg-slate-800 transition"
@@ -68,9 +71,11 @@ const TrendingProducts = () => {
             </div>
 
             <div className="p-3">
-              <h3 className="text-white text-base font-semibold">
-                {product.title}
-              </h3>
+              <Link to={`/product/${product._id}`}>
+                <h3 className="text-white text-base font-semibold hover:text-blue-400 transition">
+                  {product.title}
+                </h3>
+              </Link>
 
               <p className="text-blue-500 font-bold mt-2">
                 ₹{product.price?.toLocaleString()}

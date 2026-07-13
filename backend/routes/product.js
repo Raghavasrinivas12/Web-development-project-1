@@ -49,12 +49,15 @@ router.post('/', authMiddleware, restrictTo('vendor'), validateBody(productCheck
 });
 
 
-// FETCH ALL PRODUCTS
+// FETCH ALL PRODUCTS (optional ?category=, ?storeId=)
 router.get('/', async (req, res) => {
   try {
     const filter = {};
     if (req.query.category) {
       filter.category = new RegExp(req.query.category, 'i');
+    }
+    if (req.query.storeId) {
+      filter.storeId = req.query.storeId;
     }
 
     const products = await Product.find(filter)
@@ -67,24 +70,6 @@ router.get('/', async (req, res) => {
     });
   } catch (err) {
     console.error("Fetch All Products Error:", err);
-    return res.status(500).json({ msg: "Internal server error" });
-  }
-});
-
-
-// GET PRODUCT SPECIALLY FOR PER STORE
-router.get('/:productId', async (req, res) => {
-  try {
-    const { productId } = req.params;
-
-    const products = await Product.find({ productId }).sort({ createdAt: -1 });
-    
-    return res.json({
-      count: products.length,
-      products
-    });
-  } catch (err) {
-    console.error("Fetch Store Products Error:", err);
     return res.status(500).json({ msg: "Internal server error" });
   }
 });

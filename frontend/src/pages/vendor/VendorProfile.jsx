@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { Camera, User } from "lucide-react";
+import { Camera, User, Store, Package, ShoppingCart, IndianRupee } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
+
+const API = "http://localhost:5000";
 
 const VendorProfile = () => {
   const { user, token, updateUser } = useAuth();
@@ -12,17 +15,27 @@ const VendorProfile = () => {
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const [store, setStore] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [storeLoading, setStoreLoading] = useState(true);
+
+  const headers = { Authorization: `Bearer ${token}` };
+
   useEffect(() => {
-    axios.get("http://localhost:5000/api/user/profile", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => {
-        const u = res.data.user;
+    Promise.all([
+      axios.get(`${API}/api/user/profile`, { headers }),
+      axios.get(`${API}/api/stores/my-store`, { headers }).catch(() => null),
+      axios.get(`${API}/api/stores/stats`, { headers }).catch(() => null),
+    ])
+      .then(([profRes, storeRes, statsRes]) => {
+        const u = profRes.data.user;
         setForm({ username: u.username, phone: u.phone || "", profilePic: u.profilePic || "" });
         updateUser(u);
+        if (storeRes) setStore(storeRes.data.store);
+        if (statsRes) setStats(statsRes.data);
       })
       .catch(() => {})
-      .finally(() => setLoading(false));
+      .finally(() => { setLoading(false); setStoreLoading(false); });
   }, []);
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -34,12 +47,12 @@ const VendorProfile = () => {
     try {
       const fd = new FormData();
       fd.append("image", file);
-      const res = await axios.post("http://localhost:5000/api/upload", fd, {
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      const res = await axios.post(`${API}/api/upload`, fd, {
+        headers: { ...headers, "Content-Type": "multipart/form-data" },
       });
       setForm((p) => ({ ...p, profilePic: res.data.url }));
     } catch {
-      alert("Upload failed");
+      toast.error("Upload failed");
     } finally {
       setUploading(false);
     }
@@ -48,13 +61,12 @@ const VendorProfile = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await axios.put("http://localhost:5000/api/user/profile", form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.put(`${API}/api/user/profile`, form, { headers });
       updateUser(res.data.user);
       setEditing(false);
+      toast.success("Profile updated");
     } catch {
-      alert("Failed to update profile");
+      toast.error("Failed to update profile");
     } finally {
       setSaving(false);
     }
@@ -74,8 +86,13 @@ const VendorProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <div className="max-w-lg mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8">
+    <div className="min-h-screen bg-slate-950 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-white">Vendor Profile</h1>
+        <p className="text-slate-400 mt-1">Manage your account and store information.</p>
+      </div>
+
+      <div className="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8">
         <div className="flex flex-col items-center">
           <div className="relative">
             {form.profilePic ? (
@@ -145,6 +162,58 @@ const VendorProfile = () => {
           </div>
         </div>
       </div>
+
+      {store && (
+        <div className="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <Store className="text-blue-500" size={24} />
+            <div>
+              <h2 className="text-xl font-semibold text-white">Store Information</h2>
+              <p className="text-slate-400 text-sm">Your registered store details.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 mb-6">
+            {store.logoUrl ? (
+              <img src={store.logoUrl} alt="Store" className="w-16 h-16 rounded-xl object-cover border border-slate-700" />
+            ) : (
+              <div className="w-16 h-16 rounded-xl bg-slate-800 flex items-center justify-center">
+                <Store size={28} className="text-slate-500" />
+              </div>
+            )}
+            <div>
+              <h3 className="text-lg font-bold">{store.storeName}</h3>
+              {store.description && <p className="text-sm text-slate-400 mt-1">{store.description}</p>}
+              <span className={`inline-block mt-2 px-3 py-0.5 rounded-full text-xs ${
+                store.isApproved === "Approved" ? "bg-green-500/20 text-green-400"
+                : store.isApproved === "Rejected" ? "bg-red-500/20 text-red-400"
+                : "bg-yellow-500/20 text-yellow-400"
+              }`}>{store.isApproved || "Pending"}</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            {[
+              { label: "Products", value: store.productCount ?? 0, icon: Package, color: "text-yellow-500" },
+              { label: "Orders", value: stats?.orderCount ?? 0, icon: ShoppingCart, color: "text-pink-500" },
+              { label: "Revenue", value: "₹" + ((stats?.revenue ?? 0)).toLocaleString("en-IN"), icon: IndianRupee, color: "text-emerald-500" },
+            ].map((item) => (
+              <div key={item.label} className="bg-slate-800 rounded-xl p-4 flex items-center gap-3">
+                <item.icon size={20} className={item.color} />
+                <div>
+                  <p className="text-xs text-slate-400">{item.label}</p>
+                  <p className="text-lg font-bold">{item.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!store && !storeLoading && (
+        <div className="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center">
+          <Store size={40} className="text-slate-600 mx-auto mb-3" />
+          <p className="text-slate-400">No store registered yet.</p>
+        </div>
+      )}
     </div>
   );
 };

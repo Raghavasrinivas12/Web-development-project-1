@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Order, Product } = require('../db/db'); 
+const { Order, Product, Store } = require('../db/db'); 
 const { orderCheck } = require('../zod')
 const authMiddleware = require('../middleware/authMiddleware');
 const { restrictTo } = require('../middleware/roleMiddleware');
@@ -111,16 +111,29 @@ router.get('/vendor-dashboard', authMiddleware, restrictTo('vendor', 'superadmin
   try {
     const currentVendorUserId = req.user.userid;
 
-    // Step A: Find all products that belong to this vendor's store
-    // This step assumes you have a way to match vendor to store (e.g., store.ownerId)
-    // For this route, we pull orders that contain products matching vendor inventory profiles
-    const orders = await Order.find().populate({
-      path: 'items.productId',
-      match: { storeId: req.user.storeId } 
+    const store = await Store.findOne({ ownerId: currentVendorUserId });
+    if (!store) {
+      return res.json({ orders: [], count: 0 });
+    }
+
+    const vendorProducts = await Product.find({ storeId: store._id }).select('_id');
+    const productIds = vendorProducts.map((p) => p._id);
+
+    const orders = await Order.find({
+      'items.productId': { $in: productIds }
+    })
+      .populate('userId', 'username email')
+      .sort({ createdAt: -1 });
+
+    const enrichedOrders = orders.map((order) => {
+      const orderObj = order.toObject();
+      orderObj.vendorItems = order.items.filter((item) =>
+        productIds.some((pid) => pid.toString() === item.productId.toString())
+      );
+      return orderObj;
     });
 
-    // ONLY ORDERS CONTAINING VENDOR MERCHANDIZE
-    return res.json({ orders });
+    return res.json({ orders: enrichedOrders, count: enrichedOrders.length });
     
   } catch (err) {
     console.error("Vendor Dashboard Orders Error:", err);

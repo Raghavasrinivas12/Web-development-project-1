@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { Package, Search, Trash2, IndianRupee } from "lucide-react";
 
@@ -65,7 +66,9 @@ const AdminProducts = () => {
           <tbody>
             {filtered.map((p) => (
               <tr key={p._id} className="border-t border-slate-800 hover:bg-slate-800 text-sm">
-                <td className="p-4 font-medium">{p.title}</td>
+                <td className="p-4 font-medium">
+                  <Link to={`/product/${p._id}`} className="hover:text-blue-400 transition">{p.title}</Link>
+                </td>
                 <td className="p-4">{p.storeId?.storeName || "-"}</td>
                 <td className="p-4"><span className="flex items-center gap-0.5"><IndianRupee size={14} />{p.price?.toLocaleString("en-IN")}</span></td>
                 <td className="p-4">{p.stockQuantity}</td>
@@ -86,7 +89,7 @@ const AdminProducts = () => {
           <div key={p._id} className="bg-slate-900 rounded-xl p-5 border border-slate-800">
             <div className="flex justify-between items-start">
               <div>
-                <h2 className="text-xl font-semibold">{p.title}</h2>
+                <Link to={`/product/${p._id}`} className="text-xl font-semibold hover:text-blue-400 transition">{p.title}</Link>
                 <p className="text-slate-400 text-sm mt-1">{p.storeId?.storeName || "-"}</p>
               </div>
               <button onClick={() => deleteProduct(p._id)} className="bg-red-500 hover:bg-red-600 p-2 rounded-lg shrink-0"><Trash2 size={18} /></button>

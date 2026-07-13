@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const { Product, Order, User, Store, Category, Settings, ActivityLog } = require('../db/db');
+const { Product, Order, User, Store, Category, Settings, ActivityLog, Notification } = require('../db/db');
 const authMiddleware = require('../middleware/authMiddleware');
 const { restrictTo } = require('../middleware/roleMiddleware');
 
@@ -549,6 +549,45 @@ router.get('/activity-logs', async (req, res) => {
     return res.json({ logs });
   } catch (err) {
     return res.status(500).json({ msg: 'Failed to fetch activity logs' });
+  }
+});
+
+// ── Notifications ──
+router.get('/notifications', async (req, res) => {
+  try {
+    const count = await Notification.countDocuments();
+    if (count === 0) {
+      const samples = [
+        { title: 'New order placed', message: 'Order #1001 has been placed by Rahul Sharma.', type: 'order', link: '/admin/orders' },
+        { title: 'Vendor registered', message: 'Tech World has registered as a new vendor.', type: 'vendor', link: '/adminvendors' },
+        { title: 'Low stock alert', message: 'iPhone 15 is running low on stock.', type: 'product', link: '/admin/products' },
+        { title: 'Welcome to ShopHub Admin', message: 'You are now logged into the admin dashboard.', type: 'system' },
+      ];
+      await Notification.insertMany(samples);
+    }
+    const notifications = await Notification.find().sort({ createdAt: -1 }).limit(50);
+    const unreadCount = await Notification.countDocuments({ isRead: false });
+    return res.json({ notifications, unreadCount });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Failed to fetch notifications' });
+  }
+});
+
+router.put('/notifications/:id/read', async (req, res) => {
+  try {
+    await Notification.findByIdAndUpdate(req.params.id, { isRead: true });
+    return res.json({ msg: 'Notification marked as read' });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Failed to mark notification as read' });
+  }
+});
+
+router.put('/notifications/read-all', async (req, res) => {
+  try {
+    await Notification.updateMany({ isRead: false }, { isRead: true });
+    return res.json({ msg: 'All notifications marked as read' });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Failed to mark all as read' });
   }
 });
 
