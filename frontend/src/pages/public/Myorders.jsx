@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Package, Truck, MapPin, ChevronDown, ChevronUp } from "lucide-react";
 import axios from "axios";
@@ -111,15 +111,19 @@ export default function MyOrders() {
                   <div className="space-y-3">
                     {order.items.map((item, idx) => (
                       <div key={idx} className="flex items-center gap-4">
-                        <img
-                          src={item.productId?.images?.[0] || getImage(idx)}
-                          alt={item.title}
-                          className="w-16 h-16 rounded-lg object-cover shrink-0"
-                        />
+                        <Link to={`/product/${item.productId?._id || item.productId}`}>
+                          <img
+                            src={item.productId?.images?.[0] || getImage(idx)}
+                            alt={item.title}
+                            className="w-16 h-16 rounded-lg object-cover shrink-0"
+                          />
+                        </Link>
                         <div className="flex-1 min-w-0">
-                          <p className="text-white font-medium text-sm truncate">
-                            {item.title}
-                          </p>
+                          <Link to={`/product/${item.productId?._id || item.productId}`}>
+                            <p className="text-white font-medium text-sm truncate hover:text-blue-400 transition">
+                              {item.title}
+                            </p>
+                          </Link>
                           <p className="text-slate-400 text-xs">
                             Qty: {item.quantity} × ₹{item.priceAtPurchase?.toLocaleString()}
                           </p>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Plus, Search, Eye, SquarePen, Trash2, Package, Upload } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
@@ -218,7 +219,7 @@ const ManageProducts = () => {
                     <img src={product.images?.[0] || "https://via.placeholder.com/70"} alt={product.title}
                       className="w-16 h-16 rounded-lg object-cover border border-slate-700" />
                     <div>
-                      <h3 className="font-semibold text-white">{product.title}</h3>
+                      <Link to={`/product/${product._id}`} className="font-semibold text-white hover:text-blue-400 transition">{product.title}</Link>
                       <p className="text-slate-400 text-sm">ID : {product._id.slice(-6)}</p>
                     </div>
                   </div>
@@ -248,7 +249,7 @@ const ManageProducts = () => {
                 </td>
                 <td className="px-6 py-5">
                   <div className="flex justify-center gap-3">
-                    <button className="bg-slate-800 hover:bg-blue-600 p-2 rounded-lg transition text-white"><Eye size={18} /></button>
+                    <Link to={`/product/${product._id}`} className="bg-slate-800 hover:bg-blue-600 p-2 rounded-lg transition text-white inline-flex"><Eye size={18} /></Link>
                     <button onClick={() => openEditModal(product)} className="bg-slate-800 hover:bg-green-600 p-2 rounded-lg transition text-white"><SquarePen size={18} /></button>
                     <button onClick={() => handleDelete(product._id)} className="bg-slate-800 hover:bg-red-600 p-2 rounded-lg transition text-white"><Trash2 size={18} /></button>
                   </div>
