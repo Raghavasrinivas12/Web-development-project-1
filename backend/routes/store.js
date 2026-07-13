@@ -2,7 +2,7 @@ require('dotenv').config();
 const express=require("express");
 const authMiddleware = require('../middleware/authMiddleware');
 const { storeCheck } = require('../zod');
-const { Store } = require('../db/db');
+const { Store, Product, Order } = require('../db/db');
 const router=express.Router()
 
 
@@ -77,6 +77,51 @@ router.get('/', async (req, res) => {
   }
 });
 
+
+// GET MY STORE (by owner)
+router.get('/my-store', authMiddleware, async (req, res) => {
+  try {
+    const store = await Store.findOne({ ownerId: req.user.userid }).populate('ownerId', 'username email');
+    if (!store) {
+      return res.status(404).json({ msg: "You haven't created a store yet." });
+    }
+    const productCount = await Product.countDocuments({ storeId: store._id });
+    return res.json({ store: { ...store.toObject(), productCount } });
+  } catch (err) {
+    console.error("Error fetching my store:", err);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+// GET VENDOR STATS
+router.get('/stats', authMiddleware, async (req, res) => {
+  try {
+    const store = await Store.findOne({ ownerId: req.user.userid });
+    if (!store) {
+      return res.json({ productCount: 0, orderCount: 0, revenue: 0 });
+    }
+    const productCount = await Product.countDocuments({ storeId: store._id });
+    const vendorProducts = await Product.find({ storeId: store._id }).select('_id');
+    const productIds = vendorProducts.map((p) => p._id);
+    const orders = await Order.find({ 'items.productId': { $in: productIds } });
+    let revenue = 0;
+    let orderCount = 0;
+    for (const order of orders) {
+      if (order.orderStatus !== 'Cancelled') {
+        orderCount++;
+        for (const item of order.items) {
+          if (productIds.some((pid) => pid.toString() === item.productId.toString())) {
+            revenue += item.priceAtPurchase * item.quantity;
+          }
+        }
+      }
+    }
+    return res.json({ productCount, orderCount, revenue });
+  } catch (err) {
+    console.error("Error fetching vendor stats:", err);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
+});
 
 // FETCH SINGLE STORE
 router.get('/:id', async (req, res) => {
