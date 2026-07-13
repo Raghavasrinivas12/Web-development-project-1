@@ -75,24 +75,6 @@ router.get('/', async (req, res) => {
 });
 
 
-// GET PRODUCT SPECIALLY FOR PER STORE
-router.get('/:productId', async (req, res) => {
-  try {
-    const { productId } = req.params;
-
-    const products = await Product.find({ productId }).sort({ createdAt: -1 });
-    
-    return res.json({
-      count: products.length,
-      products
-    });
-  } catch (err) {
-    console.error("Fetch Store Products Error:", err);
-    return res.status(500).json({ msg: "Internal server error" });
-  }
-});
-
-
 // FETCH SINGLE PRODUCT DETAILS
 router.get('/:id', async (req, res) => {
   try {
