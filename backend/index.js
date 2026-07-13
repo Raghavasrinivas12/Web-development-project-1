@@ -6,7 +6,7 @@ require('./db/db');
 const express=require("express");
 const app=express()
 const cors=require("cors")
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors())
 app.use(express.json())
@@ -32,5 +32,7 @@ app.use('/api/payment',paymentRouter)
 app.use('/api/upload',uploadRouter)
 app.use('/api/admin',adminRouter)
 app.use('/api/reviews',reviewRouter)
+
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
