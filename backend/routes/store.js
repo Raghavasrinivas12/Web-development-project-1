@@ -98,14 +98,22 @@ router.get('/stats', authMiddleware, async (req, res) => {
   try {
     const store = await Store.findOne({ ownerId: req.user.userid });
     if (!store) {
-      return res.json({ productCount: 0, orderCount: 0, revenue: 0 });
+      return res.json({
+        activeListings: 0, pendingOrderCount: 0, orderCount: 0, revenue: 0,
+        pendingOrders: [], lowStockProducts: [],
+      });
     }
     const productCount = await Product.countDocuments({ storeId: store._id });
-    const vendorProducts = await Product.find({ storeId: store._id }).select('_id');
+    const vendorProducts = await Product.find({ storeId: store._id }).select('_id name stock');
     const productIds = vendorProducts.map((p) => p._id);
-    const orders = await Order.find({ 'items.productId': { $in: productIds } });
+    const productMap = {};
+    for (const p of vendorProducts) productMap[p._id.toString()] = p;
+    const orders = await Order.find({ 'items.productId': { $in: productIds } })
+      .sort({ createdAt: -1 }).populate('userId', 'username');
     let revenue = 0;
     let orderCount = 0;
+    let pendingOrderCount = 0;
+    const pendingOrders = [];
     for (const order of orders) {
       if (order.orderStatus !== 'Cancelled') {
         orderCount++;
@@ -115,8 +123,37 @@ router.get('/stats', authMiddleware, async (req, res) => {
           }
         }
       }
+      if (order.orderStatus === 'Pending') {
+        pendingOrderCount++;
+        if (pendingOrders.length < 5) {
+          const vendorItems = order.items.filter((i) =>
+            productIds.some((pid) => pid.toString() === i.productId.toString())
+          );
+          pendingOrders.push({
+            _id: order._id,
+            orderId: order.orderId,
+            userName: order.userId?.username || 'Unknown',
+            items: vendorItems.map((i) => ({
+              name: i.name,
+              quantity: i.quantity,
+              size: i.size,
+            })),
+            createdAt: order.createdAt,
+          });
+        }
+      }
     }
-    return res.json({ productCount, orderCount, revenue });
+    const lowStockProducts = vendorProducts
+      .filter((p) => p.stock > 0 && p.stock <= 5)
+      .map((p) => ({ _id: p._id, name: p.name, stock: p.stock }));
+    return res.json({
+      activeListings: productCount,
+      pendingOrderCount,
+      orderCount,
+      revenue,
+      pendingOrders,
+      lowStockProducts,
+    });
   } catch (err) {
     console.error("Error fetching vendor stats:", err);
     return res.status(500).json({ msg: "Internal server error" });
