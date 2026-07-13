@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   Store, Search, Eye, CheckCircle, XCircle, Trash2, Mail, CalendarDays,
 } from "lucide-react";
+import API_URL from "../../config";
 
 const ManageVendors = () => {
   const [vendors, setVendors] = useState([]);
@@ -14,7 +15,7 @@ const ManageVendors = () => {
   const fetchVendors = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/admin/vendors", {
+      .get(`${API_URL}/api/admin/vendors`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setVendors(res.data.vendors))
@@ -26,14 +27,14 @@ const ManageVendors = () => {
 
   const approveVendor = (id) => {
     const token = localStorage.getItem("token");
-    axios.put(`http://localhost:5000/api/admin/vendors/${id}/approve`, {}, {
+    axios.put(`${API_URL}/api/admin/vendors/${id}/approve`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     }).then(() => fetchVendors()).catch(console.error);
   };
 
   const rejectVendor = (id) => {
     const token = localStorage.getItem("token");
-    axios.put(`http://localhost:5000/api/admin/vendors/${id}/reject`, {}, {
+    axios.put(`${API_URL}/api/admin/vendors/${id}/reject`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     }).then(() => fetchVendors()).catch(console.error);
   };
@@ -41,7 +42,7 @@ const ManageVendors = () => {
   const deleteVendor = (id) => {
     if (!window.confirm("Delete this vendor?")) return;
     const token = localStorage.getItem("token");
-    axios.delete(`http://localhost:5000/api/admin/vendors/${id}`, {
+    axios.delete(`${API_URL}/api/admin/vendors/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     }).then(() => fetchVendors()).catch(console.error);
   };

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Camera } from "lucide-react";
 import axios from "axios";
+import API_URL from "../../config";
 
 export default function Profile() {
   const { user, token, updateUser, logout } = useAuth();
@@ -24,7 +25,7 @@ export default function Profile() {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/user/profile", {
+      const res = await axios.get(`${API_URL}/api/user/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const u = res.data.user;
@@ -50,7 +51,7 @@ export default function Profile() {
     try {
       const fd = new FormData();
       fd.append("image", file);
-      const res = await axios.post("http://localhost:5000/api/upload", fd, {
+      const res = await axios.post(`${API_URL}/api/upload`, fd, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       });
       setForm((prev) => ({ ...prev, profilePic: res.data.url }));
@@ -64,7 +65,7 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await axios.put("http://localhost:5000/api/user/profile", form, {
+      const res = await axios.put(`${API_URL}/api/user/profile`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       updateUser(res.data.user);

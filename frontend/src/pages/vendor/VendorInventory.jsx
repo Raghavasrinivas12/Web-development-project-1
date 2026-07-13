@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const API = "http://localhost:5000";
+import API from "../../config";
 
 const VendorInventory = () => {
   const { token } = useAuth();

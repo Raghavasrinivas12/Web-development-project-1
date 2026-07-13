@@ -1,6 +1,5 @@
 
 require('dotenv').config();
-console.log(process.env.MONGODB_URL);
 require('./db/db');
 
 const express=require("express");
@@ -10,6 +9,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors())
 app.use(express.json())
+
+app.get('/health', (req, res) => res.send('OK'))
 
 const storeRouter=require('./routes/store')
 const userRouter=require('./routes/user')

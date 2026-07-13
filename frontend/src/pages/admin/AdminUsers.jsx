@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   Search, Eye, Trash2, Ban, CheckCircle, Users, Mail, Phone, CalendarDays,
 } from "lucide-react";
+import API_URL from "../../config";
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -14,7 +15,7 @@ const AdminUsers = () => {
   const fetchUsers = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/admin/users", {
+      .get(`${API_URL}/api/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUsers(res.data.users))
@@ -27,7 +28,7 @@ const AdminUsers = () => {
   const toggleStatus = (id) => {
     const token = localStorage.getItem("token");
     axios
-      .put(`http://localhost:5000/api/admin/users/${id}/toggle-status`, {}, {
+      .put(`${API_URL}/api/admin/users/${id}/toggle-status`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => fetchUsers())
@@ -38,7 +39,7 @@ const AdminUsers = () => {
     if (!window.confirm("Delete this user?")) return;
     const token = localStorage.getItem("token");
     axios
-      .delete(`http://localhost:5000/api/admin/users/${id}`, {
+      .delete(`${API_URL}/api/admin/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => fetchUsers())

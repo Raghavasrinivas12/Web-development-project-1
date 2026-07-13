@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Bell, CheckCheck, ShoppingCart, Store, Package, Settings } from "lucide-react";
+import API_URL from "../../config";
 
 const TYPE_ICONS = { order: ShoppingCart, vendor: Store, product: Package, system: Settings };
 const TYPE_COLORS = { order: "border-blue-500", vendor: "border-green-500", product: "border-yellow-500", system: "border-purple-500" };
@@ -17,7 +18,7 @@ const AdminNotifications = () => {
   const headers = () => ({ headers: { Authorization: `Bearer ${token()}` } });
 
   const fetchNotifications = () => {
-    axios.get("http://localhost:5000/api/admin/notifications", headers())
+    axios.get(`${API_URL}/api/admin/notifications`, headers())
       .then((res) => {
         setNotifications(res.data.notifications);
         setUnreadCount(res.data.unreadCount);
@@ -29,13 +30,13 @@ const AdminNotifications = () => {
   useEffect(() => { fetchNotifications() }, []);
 
   const markAsRead = (id) => {
-    axios.put(`http://localhost:5000/api/admin/notifications/${id}/read`, {}, headers())
+    axios.put(`${API_URL}/api/admin/notifications/${id}/read`, {}, headers())
       .then(() => fetchNotifications())
       .catch(() => {});
   };
 
   const markAllRead = () => {
-    axios.put("http://localhost:5000/api/admin/notifications/read-all", {}, headers())
+    axios.put(`${API_URL}/api/admin/notifications/read-all`, {}, headers())
       .then(() => fetchNotifications())
       .catch(() => {});
   };

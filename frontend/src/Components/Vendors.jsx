@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../config";
 
 const TopVendors = () => {
   const [vendors, setVendors] = useState([]);
@@ -7,7 +8,7 @@ const TopVendors = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/stores")
+      .get(`${API_URL}/api/stores`)
       .then((res) => setVendors(res.data.stores))
       .catch(() => setVendors([]))
       .finally(() => setLoading(false));

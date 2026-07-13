@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ShoppingCart, Search, Eye } from "lucide-react";
+import API_URL from "../../config";
 
 const statusColors = {
   Pending: "bg-yellow-500/20 text-yellow-400",
@@ -20,7 +21,7 @@ const AdminOrders = () => {
   const fetchOrders = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/admin/orders", {
+      .get(`${API_URL}/api/admin/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setOrders(res.data.orders))
@@ -33,7 +34,7 @@ const AdminOrders = () => {
   const updateStatus = (id, status) => {
     const token = localStorage.getItem("token");
     axios
-      .put(`http://localhost:5000/api/admin/orders/${id}/status`, { status }, {
+      .put(`${API_URL}/api/admin/orders/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => fetchOrders())

@@ -5,7 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { IndianRupee, Package, Clock, AlertTriangle } from "lucide-react";
 
-const API = "http://localhost:5000";
+import API from "../../config";
 
 const VendorDashboard = () => {
   const { token } = useAuth();

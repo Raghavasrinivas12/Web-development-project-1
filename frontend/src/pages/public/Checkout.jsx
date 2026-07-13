@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import { ArrowLeft, CreditCard, Banknote, MapPin, LocateFixed, AlertTriangle, CheckCircle, Smartphone } from "lucide-react";
 import axios from "axios";
 import * as LocationService from "../../services/LocationService";
+import API_URL from "../../config";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -55,7 +56,7 @@ function CardPaymentForm({ address, totalPrice, token, items, clearCart, navigat
   const createOrder = async (status) => {
     try {
       await axios.post(
-        "http://localhost:5000/api/orders/checkout",
+        `${API_URL}/api/orders/checkout`,
         {
           items: items.map((i) => ({
             productId: i._id,
@@ -64,7 +65,7 @@ function CardPaymentForm({ address, totalPrice, token, items, clearCart, navigat
             priceAtPurchase: i.price,
           })),
           shippingAddress: address,
-          orderStatus: status,
+          orderStatus: "Paid",
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -227,7 +228,7 @@ export default function Checkout() {
     setError("");
     try {
       await axios.post(
-        "http://localhost:5000/api/orders/checkout",
+        `${API_URL}/api/orders/checkout`,
         {
           items: items.map((i) => ({
             productId: i._id,
@@ -257,7 +258,7 @@ export default function Checkout() {
     setError("");
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/payment/create-payment-intent",
+        `${API_URL}/api/payment/create-payment-intent`,
         { amount: totalPrice * 100, currency: "inr" },
         { headers: { Authorization: `Bearer ${token}` } }
       );

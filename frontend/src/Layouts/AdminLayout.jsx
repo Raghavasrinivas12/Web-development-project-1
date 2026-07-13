@@ -6,6 +6,7 @@ import {
   LayoutDashboard, Users, Store, Package, ShoppingCart,
   FolderTree, BarChart3, Settings, LogOut, Menu, X, Bell, UserCircle,
 } from "lucide-react";
+import API_URL from "../config";
 
 const AdminLayout = () => {
   const { user } = useAuth();
@@ -19,7 +20,7 @@ const AdminLayout = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    axios.get("http://localhost:5000/api/admin/notifications", {
+    axios.get(`${API_URL}/api/admin/notifications`, {
       headers: { Authorization: `Bearer ${token}` },
     }).then((res) => setUnreadNotifs(res.data.unreadCount)).catch(() => {});
   }, []);

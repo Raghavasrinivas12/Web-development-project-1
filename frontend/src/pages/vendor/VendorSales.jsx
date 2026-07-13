@@ -7,7 +7,7 @@ import {
   BarChart, Bar, Legend,
 } from "recharts";
 
-const API = "http://localhost:5000";
+import API from "../../config";
 
 const VendorSales = () => {
   const { token } = useAuth();

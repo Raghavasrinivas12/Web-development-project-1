@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Package, Truck, MapPin, ChevronDown, ChevronUp } from "lucide-react";
 import axios from "axios";
+import API_URL from "../../config";
 
 const statusColors = {
   Pending: "bg-yellow-500/20 text-yellow-500",
@@ -36,7 +37,7 @@ export default function MyOrders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders/history", {
+      const res = await axios.get(`${API_URL}/api/orders/history`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setOrders(res.data.orders);
