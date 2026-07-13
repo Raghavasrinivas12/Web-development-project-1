@@ -160,6 +160,116 @@ router.get('/stats', authMiddleware, async (req, res) => {
   }
 });
 
+// GET VENDOR SALES DATA
+router.get('/sales', authMiddleware, async (req, res) => {
+  try {
+    const store = await Store.findOne({ ownerId: req.user.userid });
+    if (!store) {
+      return res.json({
+        totalRevenue: 0, totalOrders: 0, monthlySales: 0, availableBalance: 0,
+        revenueByMonth: [], monthlySalesData: [], topProducts: [],
+        recentTransactions: [],
+        todayEarnings: 0, weekEarnings: 0, monthEarnings: 0, yearEarnings: 0,
+      });
+    }
+    const vendorProducts = await Product.find({ storeId: store._id }).select('_id name');
+    const productIds = vendorProducts.map((p) => p._id);
+    const productMap = {};
+    for (const p of vendorProducts) productMap[p._id.toString()] = p.name;
+
+    const orders = await Order.find({ 'items.productId': { $in: productIds } })
+      .sort({ createdAt: -1 }).populate('userId', 'username');
+
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const revenueByMonth = {};
+    const salesByMonth = {};
+    const productSales = {};
+    let totalRevenue = 0;
+    let totalOrders = 0;
+    let currentMonthRevenue = 0;
+    let todayEarnings = 0, weekEarnings = 0, monthEarnings = 0, yearEarnings = 0;
+    const recentTransactions = [];
+
+    for (const order of orders) {
+      if (order.orderStatus === 'Cancelled') continue;
+      totalOrders++;
+      const orderDate = new Date(order.createdAt);
+      const monthKey = `${orderDate.getFullYear()}-${orderDate.getMonth()}`;
+      let orderRevenue = 0;
+      for (const item of order.items) {
+        if (productIds.some((pid) => pid.toString() === item.productId.toString())) {
+          orderRevenue += item.priceAtPurchase * item.quantity;
+          const pName = productMap[item.productId.toString()] || item.title || item.name || 'Unknown';
+          if (!productSales[pName]) productSales[pName] = { name: pName, category: order.items[0]?.name || '', sold: 0, revenue: 0 };
+          productSales[pName].sold += item.quantity;
+          productSales[pName].revenue += item.priceAtPurchase * item.quantity;
+        }
+      }
+      totalRevenue += orderRevenue;
+      revenueByMonth[monthKey] = (revenueByMonth[monthKey] || 0) + orderRevenue;
+      salesByMonth[monthKey] = (salesByMonth[monthKey] || 0) + 1;
+
+      if (orderDate >= startOfToday) todayEarnings += orderRevenue;
+      if (orderDate >= startOfWeek) weekEarnings += orderRevenue;
+      if (orderDate >= startOfMonth) {
+        monthEarnings += orderRevenue;
+        currentMonthRevenue += orderRevenue;
+      }
+      if (orderDate >= startOfYear) yearEarnings += orderRevenue;
+
+      if (recentTransactions.length < 10) {
+        recentTransactions.push({
+          id: order.orderId || order._id.toString().slice(-6).toUpperCase(),
+          customer: order.userId?.username || 'Unknown',
+          amount: orderRevenue,
+          payment: order.stripePaymentIntentId ? 'Card' : 'Cash on Delivery',
+          date: order.createdAt,
+        });
+      }
+    }
+
+    const revenueByMonthArr = monthNames.map((month, i) => {
+      const key = `${now.getFullYear()}-${i}`;
+      return { month, revenue: revenueByMonth[key] || 0 };
+    });
+    const monthlySalesArr = monthNames.map((month, i) => {
+      const key = `${now.getFullYear()}-${i}`;
+      return { month, sales: salesByMonth[key] || 0 };
+    });
+
+    const topProducts = Object.values(productSales)
+      .sort((a, b) => b.sold - a.sold)
+      .slice(0, 10)
+      .map((p, idx) => ({ id: idx + 1, ...p, revenue: `₹${p.revenue.toLocaleString('en-IN')}` }));
+
+    return res.json({
+      totalRevenue,
+      totalOrders,
+      monthlySales: currentMonthRevenue,
+      availableBalance: totalRevenue,
+      revenueByMonth: revenueByMonthArr,
+      monthlySalesData: monthlySalesArr,
+      topProducts,
+      recentTransactions,
+      todayEarnings,
+      weekEarnings,
+      monthEarnings,
+      yearEarnings,
+    });
+  } catch (err) {
+    console.error("Error fetching vendor sales:", err);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
 // FETCH SINGLE STORE
 router.get('/:id', async (req, res) => {
   try {
