@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Users, Store, Package, ShoppingCart, IndianRupee, TrendingUp,
@@ -6,6 +7,7 @@ import {
 } from "lucide-react";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -38,10 +40,10 @@ const AdminDashboard = () => {
   ];
 
   const quickActions = [
-    { title: "Add Category", icon: <PlusCircle size={22} /> },
-    { title: "Manage Users", icon: <Users size={22} /> },
-    { title: "Approve Vendors", icon: <ShieldCheck size={22} /> },
-    { title: "View Orders", icon: <ClipboardList size={22} /> },
+    { title: "Add Category", icon: <PlusCircle size={22} />, to: "/admin/categories" },
+    { title: "Manage Users", icon: <Users size={22} />, to: "/adminusers" },
+    { title: "Approve Vendors", icon: <ShieldCheck size={22} />, to: "/adminvendors" },
+    { title: "View Orders", icon: <ClipboardList size={22} />, to: "/admin/orders" },
   ];
 
   return (
@@ -74,7 +76,8 @@ const AdminDashboard = () => {
         <h2 className="text-2xl font-semibold mb-6">Quick Actions</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {quickActions.map((action, index) => (
-            <button key={index} className="bg-slate-800 hover:bg-blue-500 transition rounded-xl py-5 flex flex-col items-center gap-3">
+            <button key={index} onClick={() => navigate(action.to)}
+              className="bg-slate-800 hover:bg-blue-500 transition rounded-xl py-5 flex flex-col items-center gap-3">
               {action.icon}
               <span className="text-sm">{action.title}</span>
             </button>

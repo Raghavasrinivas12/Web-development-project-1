@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 import "swiper/css";
@@ -10,6 +11,7 @@ import "swiper/css/navigation";
 const Carousel = () => {
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     axios
@@ -53,9 +55,12 @@ const Carousel = () => {
                 {banner.subtitle && (
                   <p className="text-lg text-gray-200 mb-5">{banner.subtitle}</p>
                 )}
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg">
-                  Shop Now
-                </button>
+                <Link
+    to="/products"
+    className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+>
+    Shop Now
+</Link>
               </div>
             </div>
           </div>

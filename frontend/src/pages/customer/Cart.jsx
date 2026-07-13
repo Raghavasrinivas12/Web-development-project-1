@@ -57,10 +57,14 @@ export default function Cart() {
         <div className="space-y-4">
           {items.map((item) => (
             <div key={item._id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center gap-4 shadow-xl shadow-black/20">
-              <img src={getImage(item)} alt={item.title} className="w-20 h-20 rounded-lg object-cover shrink-0 border border-slate-800" />
+              <Link to={`/product/${item._id}`}>
+                <img src={getImage(item)} alt={item.title} className="w-20 h-20 rounded-lg object-cover shrink-0 border border-slate-800" />
+              </Link>
 
               <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold truncate">{item.title}</h3>
+                <Link to={`/product/${item._id}`}>
+                  <h3 className="text-white font-semibold truncate hover:text-blue-400 transition">{item.title}</h3>
+                </Link>
                 <p className="text-rose-400 font-bold mt-1">₹{item.price?.toLocaleString('en-IN')}</p>
               </div>
 

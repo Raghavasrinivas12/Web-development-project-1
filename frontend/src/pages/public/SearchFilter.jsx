@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Search, Star, Heart,ShoppingCart } from "lucide-react";
 
 const SearchFilter = () => {
@@ -190,9 +191,9 @@ const SearchFilter = () => {
                   ₹{product.price}
                 </p>
 
-                <button className="w-full mt-4 bg-blue-500 hover:bg-blue-600 py-2 rounded-lg font-medium">
+                <Link to={`/product/${product.id}`} className="w-full mt-4 bg-blue-500 hover:bg-blue-600 py-2 rounded-lg font-medium block text-center">
                   View Product
-                </button>
+                </Link>
 
               </div>
             </div>

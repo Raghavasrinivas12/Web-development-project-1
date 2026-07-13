@@ -12,7 +12,9 @@ import Home from "./pages/public/Home";
 import Signin from "./pages/public/Signin";
 import Register from "./pages/public/Register";
 import Products from "./pages/public/Products";
+import ProductDetails from "./pages/public/ProductDetails";
 import Wishlist from "./pages/public/Wishlist";
+import SearchFilter from "./pages/public/SearchFilter";
 
 import Profile from "./pages/user/Profile";
 import Cart from "./pages/customer/Cart";
@@ -34,8 +36,12 @@ import ManageCategories from "./pages/admin/ManageCategories";
 import Reports from "./pages/admin/Reports";
 import AdminSettings from "./pages/admin/AdminSettings"
 import AdminProfile from "./pages/admin/AdminProfile";
+import AdminNotifications from "./pages/admin/AdminNotifications";
 import VendorOrders from "./pages/vendor/VendorOrders";
 import VendorSales from "./pages/vendor/VendorSales";
+import VendorProfile from "./pages/vendor/VendorProfile";
+import VendorReviews from "./pages/vendor/VendorReviews";
+import VendorInventory from "./pages/vendor/VendorInventory";
 
 function App() {
   return (
@@ -49,7 +55,9 @@ function App() {
                 <Route path="login" element={<Signin />} />
                 <Route path="register" element={<Register />} />
                 <Route path="products" element={<Products />} />
+                <Route path="product/:id" element={<ProductDetails />} />
                 <Route path="wishlist" element={<Wishlist />} />
+                <Route path="search" element={<SearchFilter />} />
               </Route>
 
               <Route element={<ProtectedRoute allowedRoles={["customer", "superadmin", "vendor"]} />}>
@@ -69,6 +77,9 @@ function App() {
                   <Route path="settings" element={<StoreSettings />} />
                   <Route path="orders" element={<VendorOrders />} />
                   <Route path="sales" element={<VendorSales />} />
+                  <Route path="profile" element={<VendorProfile />} />
+                  <Route path="inventory" element={<VendorInventory />} />
+                  <Route path="reviews" element={<VendorReviews />} />
                 </Route>
               </Route>
               
@@ -99,6 +110,9 @@ function App() {
               </Route>
               <Route path="/admin/profile" element={<AdminLayout />}>
                 <Route index element={<AdminProfile />} />
+              </Route>
+              <Route path="/admin/notifications" element={<AdminLayout />}>
+                <Route index element={<AdminNotifications />} />
               </Route>
          </Route>
               

@@ -55,7 +55,9 @@ const Wishlist = () => {
           {items.map((item) => (
             <div key={item._id} className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all duration-200 shadow-xl shadow-black/30">
               <div className="relative group">
-                <img src={getImage(item)} alt={item.title} className="h-48 w-full object-cover transition duration-300 group-hover:scale-102" />
+                <Link to={`/product/${item._id}`}>
+                  <img src={getImage(item)} alt={item.title} className="h-48 w-full object-cover transition duration-300 group-hover:scale-102" />
+                </Link>
                 <button
                   onClick={() => removeItem(item._id)}
                   className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hover:bg-red-600 transition duration-150 cursor-pointer"
@@ -65,7 +67,9 @@ const Wishlist = () => {
               </div>
 
               <div className="p-4 space-y-3">
-                <h3 className="text-white text-base font-semibold truncate">{item.title}</h3>
+                <Link to={`/product/${item._id}`}>
+                  <h3 className="text-white text-base font-semibold truncate hover:text-blue-400 transition">{item.title}</h3>
+                </Link>
 
                 {item.rating && (
                   <div className="flex items-center gap-1">

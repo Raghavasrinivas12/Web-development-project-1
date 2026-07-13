@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import {Settings,Gift,Receipt,Menu,X,ShoppingCart,ChartColumn} from "lucide-react";
+import {Settings,Gift,Receipt,Menu,X,ShoppingCart,ChartColumn,User,MessageSquare, Package} from "lucide-react";
 import {  useAuth} from '../context/AuthContext';
 import { useState } from 'react';
 const VendorLayout = () => {
@@ -20,7 +20,7 @@ const VendorLayout = () => {
     </button>
 
     <h1 className="text-xl font-bold text-blue-500">
-        ZAALIMA
+        ShopHub
     </h1>
 
 </div>
@@ -37,9 +37,13 @@ const VendorLayout = () => {
 
 </div>
           <div className="text-2xl font-bold tracking-wider text-blue-500 mb-8 border-b border-slate-700 pb-4">
-            ZAALIMA <span className="text-white text-sm block tracking-normal font-normal opacity-60">Vendor Core</span>
+            ShopHub<span className="text-white text-sm block tracking-normal font-normal opacity-60">Vendor Core</span>
           </div>
           <nav className="space-y-3">
+            <Link to="/vendor/dashboard/profile" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
+              <User size={20}/>
+              <span>Profile</span>
+            </Link>
             <Link to="/vendor/dashboard" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
               <Receipt/>
                Overview Console
@@ -66,6 +70,17 @@ const VendorLayout = () => {
               <span>Manage Sales</span>
               
             </Link>
+            <Link to="/vendor/dashboard/inventory" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
+            
+              <Package size={20}/>
+              <span>Manage Inventory</span>
+              
+            </Link>
+            <Link to="/vendor/dashboard/reviews" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
+              <MessageSquare size={20}/>
+              <span>Reviews</span>
+            </Link>
+            
           </nav>
         </div>
         <button 

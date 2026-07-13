@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 import {
   LayoutDashboard, Users, Store, Package, ShoppingCart,
   FolderTree, BarChart3, Settings, LogOut, Menu, X, Bell, UserCircle,
@@ -12,7 +13,16 @@ const AdminLayout = () => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [unreadNotifs, setUnreadNotifs] = useState(0);
   const expanded = sidebarExpanded || sidebarOpen;
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    axios.get("http://localhost:5000/api/admin/notifications", {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((res) => setUnreadNotifs(res.data.unreadCount)).catch(() => {});
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -28,6 +38,7 @@ const AdminLayout = () => {
     { name: "Orders",     path: "/admin/orders",    icon: <ShoppingCart size={20} /> },
     { name: "Categories", path: "/admin/categories", icon: <FolderTree size={20} /> },
     { name: "Reports",    path: "/admin/reports",   icon: <BarChart3 size={20} /> },
+    { name: "Notifications", path: "/admin/notifications", icon: <Bell size={20} /> },
     { name: "Settings",   path: "/admin/settings",  icon: <Settings size={20} /> },
   ];
 
@@ -50,9 +61,11 @@ const AdminLayout = () => {
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          <button className="relative">
+          <button onClick={() => navigate("/admin/notifications")} className="relative">
             <Bell size={20} />
-            <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-[10px] rounded-full px-1">3</span>
+            {unreadNotifs > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-[10px] rounded-full px-1">{unreadNotifs}</span>
+            )}
           </button>
         </div>
       </header>
