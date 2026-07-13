@@ -336,7 +336,7 @@ const ManageProducts = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(product.id)}
-                      className="bg-slate-800 hover:bg-red-600 p-2 rounded-lg transition text-white"
+                      className="bg-slate-800 hover:bg-slate-600 p-2 rounded-lg transition text-white"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -557,7 +557,7 @@ const ManageProducts = () => {
                             fileInputRef.current.value = "";
                           }
                         }}
-                        className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 rounded-full w-7 h-7 flex items-center justify-center text-white text-sm font-bold shadow-lg"
+                        className="absolute -top-2 -right-2 bg-slate-500 hover:bg-slate-600 rounded-full w-7 h-7 flex items-center justify-center text-white text-sm font-bold shadow-lg"
                       >
                         ×
                       </button>

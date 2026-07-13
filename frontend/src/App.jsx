@@ -13,6 +13,7 @@ import Signin from "./pages/public/Signin";
 import Register from "./pages/public/Register";
 import Products from "./pages/public/Products";
 import Wishlist from "./pages/public/Wishlist";
+import SearchFilter from "./pages/public/SearchFilter";
 
 import Profile from "./pages/user/Profile";
 import Cart from "./pages/customer/Cart";
@@ -53,6 +54,7 @@ function App() {
                 <Route path="register" element={<Register />} />
                 <Route path="products" element={<Products />} />
                 <Route path="wishlist" element={<Wishlist />} />
+                <Route path="search" element={<SearchFilter />} />
               </Route>
 
               <Route element={<ProtectedRoute allowedRoles={["customer", "superadmin", "vendor"]} />}>
