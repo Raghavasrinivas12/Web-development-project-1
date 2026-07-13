@@ -19,6 +19,7 @@ const homeRouter=require('./routes/home')
 const paymentRouter=require('./routes/payment')
 const uploadRouter=require('./routes/upload')
 const adminRouter=require('./routes/admin')
+const reviewRouter=require('./routes/review')
 
 
 app.use('/api/user',userRouter)
@@ -30,8 +31,6 @@ app.use('/api/home',homeRouter)
 app.use('/api/payment',paymentRouter)
 app.use('/api/upload',uploadRouter)
 app.use('/api/admin',adminRouter)
-
-
-app.listen(PORT, () => {
+app.use('/api/reviews',reviewRouter)
   console.log(`Server running on port ${PORT}`);
 });

@@ -12,6 +12,7 @@ import Home from "./pages/public/Home";
 import Signin from "./pages/public/Signin";
 import Register from "./pages/public/Register";
 import Products from "./pages/public/Products";
+import ProductDetails from "./pages/public/ProductDetails";
 import Wishlist from "./pages/public/Wishlist";
 import SearchFilter from "./pages/public/SearchFilter";
 
@@ -54,6 +55,7 @@ function App() {
                 <Route path="login" element={<Signin />} />
                 <Route path="register" element={<Register />} />
                 <Route path="products" element={<Products />} />
+                <Route path="product/:id" element={<ProductDetails />} />
                 <Route path="wishlist" element={<Wishlist />} />
                 <Route path="search" element={<SearchFilter />} />
               </Route>
