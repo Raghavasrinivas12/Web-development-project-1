@@ -170,7 +170,7 @@ const Navbar = () => {
                     <div className="border-t border-slate-800 mt-1 pt-1">
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-slate-800 transition w-full text-left"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-blue-400 hover:text-blue-300 hover:bg-slate-800 transition w-full text-left"
                       >
                         <LogOut size={16} />
                         Sign Out
@@ -242,14 +242,14 @@ const Navbar = () => {
         
 
         <div className="flex flex-col p-4 gap-4 text-sm">
-          <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+          <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
             <House size={18} /> Home
           </Link>
 
           <div>
             <button
               onClick={() => setShowCategories(!showCategories)}
-              className="flex items-center justify-between w-full hover:text-blue-500"
+              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200"
             >
               <div className="flex items-center gap-3">
                 <Grid3X3 size={18} /> Categories
@@ -263,7 +263,7 @@ const Navbar = () => {
                     key={category.name}
                     to={`/products?category=${category.name.toLowerCase()}`}
                     onClick={() => { setIsOpen(false); setShowCategories(false); }}
-                    className="flex items-center gap-3 text-slate-300 hover:text-blue-500 text-sm"
+                    className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200"
                   >
                     {category.icon}
                     {category.name}
@@ -273,22 +273,22 @@ const Navbar = () => {
             )}
           </div>
 
-          <Link to="/myorders" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+          <Link to="/myorders" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
             <Receipt size={18} /> My Orders
           </Link>
 
-          <Link to="/products" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+          <Link to="/products" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
             <Package size={18} /> Products
           </Link>
 
           {isAuthenticated ? (
             <>
-              <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+              <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
                 <User size={18} /> My Profile
               </Link>
               <button
                 onClick={() => { handleLogout(); setIsOpen(false); }}
-                className="flex items-center gap-3 text-red-400 hover:text-red-300 w-full text-left"
+                className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200"
               >
                 <LogOut size={18} /> Sign Out
               </button>
@@ -304,11 +304,11 @@ const Navbar = () => {
             </>
           )}
 
-          <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+          <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
             <ShoppingCart size={18} /> Cart
           </Link>
 
-          <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+          <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
             <Heart size={18} /> Wishlist
           </Link>
         </div>
