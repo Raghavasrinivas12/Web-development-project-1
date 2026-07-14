@@ -30,7 +30,7 @@ const Wishlist = () => {
           <p className="text-slate-400 mb-6">Save items you love and view them later.</p>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-rose-600/10"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/10"
           >
             <ArrowLeft size={18} />
             Browse Products
@@ -44,7 +44,7 @@ const Wishlist = () => {
     <div className="min-h-screen bg-slate-950 px-4 py-10">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <Heart className="text-rose-500" size={28} />
+          <Heart className="text-blue-500" size={28} />
           <h1 className="text-3xl font-bold text-white tracking-tight">My Wishlist</h1>
           <span className="text-slate-500 text-sm mt-1.5">
             ({items.length} item{items.length !== 1 ? "s" : ""})
@@ -60,7 +60,7 @@ const Wishlist = () => {
                 </Link>
                 <button
                   onClick={() => removeItem(item._id)}
-                  className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hover:bg-red-600 transition duration-150 cursor-pointer"
+                  className="absolute top-2 right-2 w-8 h-8 rounded-full bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hover:bg-blue-600 transition duration-150 cursor-pointer"
                 >
                   <Trash2 size={15} className="text-white" />
                 </button>
@@ -79,7 +79,7 @@ const Wishlist = () => {
                 )}
 
                 <div className="flex items-baseline gap-2">
-                  <span className="text-rose-400 font-bold">₹{item.price?.toLocaleString('en-IN')}</span>
+                  <span className="text-blue-400 font-bold">₹{item.price?.toLocaleString('en-IN')}</span>
                   {item.originalPrice && (
                     <>
                       <span className="text-slate-500 line-through text-xs">₹{item.originalPrice?.toLocaleString('en-IN')}</span>
@@ -90,7 +90,7 @@ const Wishlist = () => {
 
                 <button
                   onClick={() => { addItem(item); removeItem(item._id); }}
-                  className="w-full flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white py-2.5 rounded-lg transition-colors duration-150 font-medium text-sm cursor-pointer shadow-md shadow-rose-600/5"
+                  className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-2.5 rounded-lg transition-colors duration-150 font-medium text-sm cursor-pointer shadow-md shadow-blue-600/5"
                 >
                   <ShoppingCart size={15} />
                   Add to Cart
