@@ -5,7 +5,7 @@ const jwt=require("jsonwebtoken");
 const crypto = require('crypto');
 const { userCheck, profileUpdateCheck } = require("../zod");
 const bcrypt = require('bcrypt');
-const { User } = require("../db/db");
+const { User, Notification } = require("../db/db");
 const authMiddleware = require('../middleware/authMiddleware');
 const { sendVerificationEmail, sendResetEmail } = require('../email');
 
@@ -52,6 +52,8 @@ router.post('/signup', async (req, res) => {
       console.error('Verification email failed:', emailErr.message);
     }
 
+    const isResendConfigured = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 're_xxxxxxxxxxxx';
+
     const tokenPayload = {
       userid: user._id,
       role: user.role   
@@ -69,11 +71,24 @@ router.post('/signup', async (req, res) => {
       isVerified: false
     };
 
-    return res.status(201).json({
+    const response = {
       msg: "Successfully signed up. Please check your email to verify your account.",
       token,
       user: userData
+    };
+    if (!isResendConfigured) {
+      response.devUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email/${verificationToken}`;
+    }
+
+    await Notification.create({
+      userId: user._id,
+      title: 'Welcome to ShopHub!',
+      message: 'Your account has been created. Verify your email to start shopping.',
+      type: 'system',
+      link: '/'
     });
+
+    return res.status(201).json(response);
 
   } catch (err) {
     console.error("Signup Error:", err);
@@ -109,7 +124,8 @@ router.post('/signin', async (req, res) => {
       email: user.email,
       phone: user.phone,
       role: user.role,
-      profilePic: user.profilePic || ''
+      profilePic: user.profilePic || '',
+      isVerified: user.isVerified
     };
 
     return res.json({
@@ -161,7 +177,8 @@ router.get('/profile', authMiddleware, async (req, res) => {
       email: user.email,
       phone: user.phone,
       role: user.role,
-      profilePic: user.profilePic || ''
+      profilePic: user.profilePic || '',
+      isVerified: user.isVerified
     };
 
     return res.json({ user: userData });
@@ -268,13 +285,21 @@ router.post('/forgot-password', async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
+    const isResendConfigured = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 're_xxxxxxxxxxxx';
+
     try {
       await sendResetEmail(email, resetToken);
     } catch (emailErr) {
       console.error('Reset email failed:', emailErr.message);
     }
 
-    return res.json({ msg: "If that email is registered, a reset link has been sent." });
+    const response = { msg: "If that email is registered, a reset link has been sent." };
+    if (!isResendConfigured) {
+      const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
+      response.devUrl = resetUrl;
+    }
+
+    return res.json(response);
   } catch (err) {
     console.error("Forgot Password Error:", err);
     return res.status(500).json({ msg: "Internal server error" });

@@ -164,6 +164,7 @@ const ReviewSchema = new mongoose.Schema({
 
 // NOTIFICATION SCHEMA
 const NotificationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
   message: { type: String, default: '' },
   type: { type: String, enum: ['order', 'vendor', 'product', 'system'], default: 'system' },

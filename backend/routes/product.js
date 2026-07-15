@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Product, Store } = require('../db/db'); // Path to your Mongoose schemas
+const { Product, Store, User } = require('../db/db'); // Path to your Mongoose schemas
 const { productCheck } = require('../zod'); 
 
 
@@ -23,6 +23,11 @@ router.post('/', authMiddleware, restrictTo('vendor'), validateBody(productCheck
 
     if (store.ownerId.toString() !== currentUserId && req.user.role !== 'superadmin') {
       return res.status(403).json({ msg: "Unauthorized: You cannot add items to a store you do not own." });
+    }
+
+    const user = await User.findById(currentUserId);
+    if (!user.isVerified) {
+      return res.status(403).json({ msg: "Please verify your email before adding products" });
     }
 
     

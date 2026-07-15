@@ -21,6 +21,7 @@ const paymentRouter=require('./routes/payment')
 const uploadRouter=require('./routes/upload')
 const adminRouter=require('./routes/admin')
 const reviewRouter=require('./routes/review')
+const notificationRouter=require('./routes/notification')
 
 
 app.use('/api/user',userRouter)
@@ -33,6 +34,7 @@ app.use('/api/payment',paymentRouter)
 app.use('/api/upload',uploadRouter)
 app.use('/api/admin',adminRouter)
 app.use('/api/reviews',reviewRouter)
+app.use('/api/notifications', notificationRouter)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

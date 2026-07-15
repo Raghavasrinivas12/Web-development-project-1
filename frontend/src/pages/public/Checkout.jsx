@@ -113,7 +113,7 @@ function CardPaymentForm({ address, totalPrice, token, items, clearCart, navigat
 
 export default function Checkout() {
   const { items, totalPrice, clearCart } = useCart();
-  const { token } = useAuth();
+  const { token, isVerified, user, refreshUser } = useAuth();
   const navigate = useNavigate();
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -283,7 +283,18 @@ export default function Checkout() {
           Back to Cart
         </button>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
+        {!isVerified && (
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-2xl p-6 mb-6 text-center">
+            <AlertTriangle size={32} className="mx-auto text-yellow-400 mb-3" />
+            <h2 className="text-xl font-bold text-white mb-1">Email Not Verified</h2>
+            <p className="text-slate-400 mb-4">Please verify your email before placing an order.</p>
+            <button onClick={() => refreshUser()} className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition text-sm">
+              Refresh Status
+            </button>
+          </div>
+        )}
+
+        {isVerified && (        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <MapPin size={24} className="text-blue-500" />
             <h1 className="text-2xl font-bold text-white">Checkout</h1>
@@ -512,7 +523,8 @@ export default function Checkout() {
             </Elements>
           )}
         </div>
-      </div>
+      )} {/* end isVerified */}
+    </div>
     </div>
   );
 }

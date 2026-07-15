@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Order, Product, Store } = require('../db/db'); 
+const { Order, Product, Store, User, Notification } = require('../db/db'); 
 const { orderCheck } = require('../zod')
 const authMiddleware = require('../middleware/authMiddleware');
 const { restrictTo } = require('../middleware/roleMiddleware');
@@ -9,6 +9,13 @@ const { restrictTo } = require('../middleware/roleMiddleware');
 router.post('/checkout', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.userid;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    if (!user.isVerified) {
+      return res.status(403).json({ msg: "Please verify your email before placing an order" });
+    }
+
     const { items, shippingAddress, orderStatus } = req.body;
 
     if (!items || items.length === 0) {
@@ -73,6 +80,14 @@ router.post('/checkout', authMiddleware, async (req, res) => {
         $inc: { stockQuantity: -item.quantity }
       });
     }
+
+    await Notification.create({
+      userId,
+      title: 'Order placed',
+      message: `Your order of ₹${calculatedTotal.toLocaleString()} has been placed successfully.`,
+      type: 'order',
+      link: '/myorders'
+    });
 
     return res.status(201).json({
       msg: "Checkout order pipeline initialized successfully!",

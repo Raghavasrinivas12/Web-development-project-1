@@ -20,6 +20,7 @@ import Wishlist from "./pages/public/Wishlist";
 import SearchFilter from "./pages/public/SearchFilter";
 
 import Profile from "./pages/user/Profile";
+import Notifications from "./pages/user/Notifications";
 import Cart from "./pages/customer/Cart";
 import Checkout from "./pages/public/Checkout";
 import PaymentSuccess from "./pages/public/PaymentSuccess";
@@ -69,6 +70,7 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={["customer", "superadmin", "vendor"]} />}>
                 <Route element={<UserLayout />}>
                   <Route path="profile" element={<Profile />} />
+                  <Route path="notifications" element={<Notifications />} />
                   <Route path="cart" element={<Cart />} />
                   <Route path="checkout" element={<Checkout />} />
                   <Route path="payment-success" element={<PaymentSuccess />} />

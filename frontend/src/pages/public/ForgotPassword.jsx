@@ -2,19 +2,21 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
+import { Mail, ArrowLeft, CheckCircle, Terminal } from "lucide-react";
 import API_URL from "../../config";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [devUrl, setDevUrl] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post(`${API_URL}/api/user/forgot-password`, { email });
+      const res = await axios.post(`${API_URL}/api/user/forgot-password`, { email });
+      if (res.data.devUrl) setDevUrl(res.data.devUrl);
       setSent(true);
     } catch {
       setError("Something went wrong. Try again.");
@@ -28,6 +30,14 @@ const ForgotPassword = () => {
           <CheckCircle size={64} className="mx-auto text-green-500 mb-6" />
           <h1 className="text-3xl font-bold text-white mb-2">Check Your Email</h1>
           <p className="text-slate-400">If that email is registered, we've sent a password reset link.</p>
+          {devUrl && (
+            <div className="mt-6 p-4 bg-slate-900 border border-yellow-500/30 rounded-xl text-left">
+              <div className="flex items-center gap-2 text-yellow-400 text-sm font-medium mb-2">
+                <Terminal size={16} /> Dev Mode — Reset URL
+              </div>
+              <a href={devUrl} className="text-blue-400 hover:text-blue-300 text-sm break-all underline">{devUrl}</a>
+            </div>
+          )}
           <Link to="/login" className="inline-block mt-8 text-blue-500 hover:text-blue-400">Back to Login</Link>
         </div>
       </div>

@@ -2,7 +2,7 @@ require('dotenv').config();
 const express=require("express");
 const authMiddleware = require('../middleware/authMiddleware');
 const { storeCheck } = require('../zod');
-const { Store, Product, Order } = require('../db/db');
+const { Store, Product, Order, User } = require('../db/db');
 const router=express.Router()
 
 
@@ -16,6 +16,11 @@ router.post('/', authMiddleware, async (req, res) => {
     // Guard endpoint against non-vendor roles
     if (userRole !== 'vendor' && userRole !== 'superadmin') {
       return res.status(403).json({ msg: "Access denied: Only vendors can register a storefront." });
+    }
+
+    const user = await User.findById(ownerId);
+    if (!user.isVerified) {
+      return res.status(403).json({ msg: "Please verify your email before creating a store" });
     }
 
     

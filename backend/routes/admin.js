@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -156,6 +157,15 @@ router.put('/orders/:id/status', async (req, res) => {
       { new: true }
     );
     if (!order) return res.status(404).json({ msg: 'Order not found' });
+
+    await Notification.create({
+      userId: order.userId,
+      title: 'Order status updated',
+      message: `Your order status has been updated to "${status}".`,
+      type: 'order',
+      link: '/myorders'
+    });
+
     return res.json({ msg: 'Order status updated', order });
   } catch (err) {
     return res.status(500).json({ msg: 'Failed to update order status' });
@@ -557,11 +567,13 @@ router.get('/notifications', async (req, res) => {
   try {
     const count = await Notification.countDocuments();
     if (count === 0) {
+      const adminUser = await User.findOne({ role: 'superadmin' });
+      const adminId = adminUser?._id || new mongoose.Types.ObjectId();
       const samples = [
-        { title: 'New order placed', message: 'Order #1001 has been placed by Rahul Sharma.', type: 'order', link: '/admin/orders' },
-        { title: 'Vendor registered', message: 'Tech World has registered as a new vendor.', type: 'vendor', link: '/adminvendors' },
-        { title: 'Low stock alert', message: 'iPhone 15 is running low on stock.', type: 'product', link: '/admin/products' },
-        { title: 'Welcome to ShopHub Admin', message: 'You are now logged into the admin dashboard.', type: 'system' },
+        { userId: adminId, title: 'New order placed', message: 'Order #1001 has been placed by Rahul Sharma.', type: 'order', link: '/admin/orders' },
+        { userId: adminId, title: 'Vendor registered', message: 'Tech World has registered as a new vendor.', type: 'vendor', link: '/adminvendors' },
+        { userId: adminId, title: 'Low stock alert', message: 'iPhone 15 is running low on stock.', type: 'product', link: '/admin/products' },
+        { userId: adminId, title: 'Welcome to ShopHub Admin', message: 'You are now logged into the admin dashboard.', type: 'system' },
       ];
       await Notification.insertMany(samples);
     }
