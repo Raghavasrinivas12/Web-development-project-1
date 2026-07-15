@@ -4,6 +4,7 @@ import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { ShoppingCart, Star, Heart } from "lucide-react";
 import axios from "axios";
+import API_URL from "../config";
 
 const placeholders = [
   "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
@@ -22,7 +23,7 @@ const TrendingProducts = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/products")
+      .get(`${API_URL}/api/products`)
       .then((res) => setProducts(res.data.products.slice(0, 8)))
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));

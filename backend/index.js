@@ -1,6 +1,5 @@
 
 require('dotenv').config();
-console.log(process.env.MONGODB_URL);
 require('./db/db');
 
 const express=require("express");
@@ -11,6 +10,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors())
 app.use(express.json())
 
+app.get('/health', (req, res) => res.send('OK'))
+
 const storeRouter=require('./routes/store')
 const userRouter=require('./routes/user')
 const orderRouter=require('./routes/order')
@@ -20,6 +21,7 @@ const paymentRouter=require('./routes/payment')
 const uploadRouter=require('./routes/upload')
 const adminRouter=require('./routes/admin')
 const reviewRouter=require('./routes/review')
+const notificationRouter=require('./routes/notification')
 
 
 app.use('/api/user',userRouter)
@@ -32,6 +34,7 @@ app.use('/api/payment',paymentRouter)
 app.use('/api/upload',uploadRouter)
 app.use('/api/admin',adminRouter)
 app.use('/api/reviews',reviewRouter)
+app.use('/api/notifications', notificationRouter)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

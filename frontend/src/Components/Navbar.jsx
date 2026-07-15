@@ -23,10 +23,13 @@ import {
   LogOut,
   Settings,
   Receipt,
+  Bell,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import API_URL from "../config";
+import axios from "axios";
 
 const categories = [
   { name: "Electronics", icon: <Laptop size={16} /> },
@@ -44,6 +47,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifCount, setNotifCount] = useState(0);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -55,6 +59,13 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    axios.get(`${API_URL}/api/notifications`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    }).then(res => setNotifCount(res.data.unreadCount)).catch(() => {});
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
     logout();
@@ -128,6 +139,17 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
+
+            {isAuthenticated && (
+              <Link to="/notifications" className="relative hover:text-blue-500 transition">
+                <Bell size={20} />
+                {notifCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-blue-500 text-xs px-1.5 rounded-full">
+                    {notifCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <div className="relative" ref={dropdownRef}>
@@ -285,6 +307,9 @@ const Navbar = () => {
             <>
               <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
                 <User size={18} /> My Profile
+              </Link>
+              <Link to="/notifications" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
+                <Bell size={18} /> Notifications
               </Link>
               <button
                 onClick={() => { handleLogout(); setIsOpen(false); }}

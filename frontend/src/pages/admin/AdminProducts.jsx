@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Package, Search, Trash2, IndianRupee } from "lucide-react";
+import API_URL from "../../config";
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -11,7 +12,7 @@ const AdminProducts = () => {
   const fetchProducts = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/admin/products", {
+      .get(`${API_URL}/api/admin/products`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setProducts(res.data.products))
@@ -25,7 +26,7 @@ const AdminProducts = () => {
     if (!window.confirm("Delete this product?")) return;
     const token = localStorage.getItem("token");
     axios
-      .delete(`http://localhost:5000/api/admin/products/${id}`, {
+      .delete(`${API_URL}/api/admin/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => fetchProducts())

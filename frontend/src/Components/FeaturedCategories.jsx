@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../config";
 
 const FeaturedCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -8,7 +9,7 @@ const FeaturedCategories = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/home/categories")
+      .get(`${API_URL}/api/home/categories`)
       .then((res) => setCategories(res.data.categories))
       .catch(() => setCategories([]))
       .finally(() => setLoading(false));

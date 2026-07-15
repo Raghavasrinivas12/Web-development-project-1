@@ -4,7 +4,7 @@ import { Camera, User, Store, Package, ShoppingCart, IndianRupee } from "lucide-
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const API = "http://localhost:5000";
+import API from "../../config";
 
 const VendorProfile = () => {
   const { user, token, updateUser } = useAuth();

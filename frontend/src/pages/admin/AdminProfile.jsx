@@ -6,6 +6,7 @@ import {
   User, Camera, Edit3, Mail, Phone, Shield, Calendar,
   Eye, EyeOff, Lock, Users, Store, ShoppingCart, FileText,
 } from "lucide-react";
+import API_URL from "../../config";
 
 const AdminProfile = () => {
   const navigate = useNavigate();
@@ -37,9 +38,9 @@ const AdminProfile = () => {
     const t = token();
     if (!t) { navigate("/login"); return; }
     Promise.all([
-      axios.get("http://localhost:5000/api/user/profile", headers()),
-      axios.get("http://localhost:5000/api/admin/stats", headers()),
-      axios.get("http://localhost:5000/api/admin/activity-logs", headers()),
+      axios.get(`${API_URL}/api/user/profile`, headers()),
+      axios.get(`${API_URL}/api/admin/stats`, headers()),
+      axios.get(`${API_URL}/api/admin/activity-logs`, headers()),
     ])
       .then(([profRes, statsRes, logsRes]) => {
         const u = profRes.data.user;
@@ -62,7 +63,7 @@ const AdminProfile = () => {
     try {
       const fd = new FormData();
       fd.append("image", file);
-      const res = await axios.post("http://localhost:5000/api/upload", fd, {
+      const res = await axios.post(`${API_URL}/api/upload`, fd, {
         headers: { Authorization: `Bearer ${token()}`, "Content-Type": "multipart/form-data" },
       });
       setForm((p) => ({ ...p, profilePic: res.data.url }));
@@ -76,7 +77,7 @@ const AdminProfile = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await axios.put("http://localhost:5000/api/user/profile", form, headers());
+      const res = await axios.put(`${API_URL}/api/user/profile`, form, headers());
       const u = res.data.user;
       setUserData(u);
       setOriginalForm({ username: u.username, phone: u.phone || "", profilePic: u.profilePic || "" });
@@ -100,7 +101,7 @@ const AdminProfile = () => {
     if (newPassword !== confirmPassword) return toast.error("Passwords do not match");
     setChangingPassword(true);
     try {
-      await axios.put("http://localhost:5000/api/admin/settings/password",
+      await axios.put(`${API_URL}/api/admin/settings/password`,
         { currentPassword, newPassword }, headers());
       toast.success("Password changed");
       setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");

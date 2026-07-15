@@ -7,7 +7,7 @@ import { useWishlist } from "../../context/WishlistContext";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const API = "http://localhost:5000";
+import API from "../../config";
 
 const ProductDetails = () => {
   const { id } = useParams();

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
+import API_URL from "../../config";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import {
@@ -50,7 +51,7 @@ export default function Products() {
     setError("");
     try {
       const params = activeCategory ? { category: activeCategory } : {};
-      const res = await axios.get("http://localhost:5000/api/products", { params });
+      const res = await axios.get(`${API_URL}/api/products`, { params });
       setProducts(res.data.products);
     } catch {
       setError("Failed to load products");

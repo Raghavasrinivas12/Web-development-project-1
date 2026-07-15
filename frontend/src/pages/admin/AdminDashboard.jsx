@@ -5,6 +5,7 @@ import {
   Users, Store, Package, ShoppingCart, IndianRupee, TrendingUp,
   ClipboardList, PlusCircle, ShieldCheck, Activity,
 } from "lucide-react";
+import API_URL from "../../config";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:5000/api/admin/stats", {
+      .get(`${API_URL}/api/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setData(res.data))

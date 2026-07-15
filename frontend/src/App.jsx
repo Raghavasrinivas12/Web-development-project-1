@@ -11,12 +11,16 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import Home from "./pages/public/Home";
 import Signin from "./pages/public/Signin";
 import Register from "./pages/public/Register";
+import ForgotPassword from "./pages/public/ForgotPassword";
+import ResetPassword from "./pages/public/ResetPassword";
+import VerifyEmail from "./pages/public/VerifyEmail";
 import Products from "./pages/public/Products";
 import ProductDetails from "./pages/public/ProductDetails";
 import Wishlist from "./pages/public/Wishlist";
 import SearchFilter from "./pages/public/SearchFilter";
 
 import Profile from "./pages/user/Profile";
+import Notifications from "./pages/user/Notifications";
 import Cart from "./pages/customer/Cart";
 import Checkout from "./pages/public/Checkout";
 import PaymentSuccess from "./pages/public/PaymentSuccess";
@@ -54,6 +58,9 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="login" element={<Signin />} />
                 <Route path="register" element={<Register />} />
+                <Route path="forgot-password" element={<ForgotPassword />} />
+                <Route path="reset-password/:token" element={<ResetPassword />} />
+                <Route path="verify-email/:token" element={<VerifyEmail />} />
                 <Route path="products" element={<Products />} />
                 <Route path="product/:id" element={<ProductDetails />} />
                 <Route path="wishlist" element={<Wishlist />} />
@@ -63,6 +70,7 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={["customer", "superadmin", "vendor"]} />}>
                 <Route element={<UserLayout />}>
                   <Route path="profile" element={<Profile />} />
+                  <Route path="notifications" element={<Notifications />} />
                   <Route path="cart" element={<Cart />} />
                   <Route path="checkout" element={<Checkout />} />
                   <Route path="payment-success" element={<PaymentSuccess />} />

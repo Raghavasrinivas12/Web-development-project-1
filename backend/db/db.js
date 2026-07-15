@@ -26,7 +26,11 @@ const UserSchema = new mongoose.Schema({
   profilePic: { type: String, default: '' },
   role: {type: String,enum: ['customer', 'vendor', 'superadmin'], default: 'customer' 
   },
-  isActive: { type: Boolean, default: true }
+  isActive: { type: Boolean, default: true },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: { type: String },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date }
 }, { timestamps: true });
 
 
@@ -160,6 +164,7 @@ const ReviewSchema = new mongoose.Schema({
 
 // NOTIFICATION SCHEMA
 const NotificationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   title: { type: String, required: true },
   message: { type: String, default: '' },
   type: { type: String, enum: ['order', 'vendor', 'product', 'system'], default: 'system' },

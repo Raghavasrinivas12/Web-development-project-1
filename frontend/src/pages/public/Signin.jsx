@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
+import API_URL from "../../config";
 
 const brandingVariants = {
   hidden: { opacity: 0 },
@@ -44,7 +45,7 @@ export default function Signin() {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/user/signin",
+        `${API_URL}/api/user/signin`,
         form
       );
       login(res.data.user, res.data.token);
@@ -235,12 +236,12 @@ export default function Signin() {
                     Remember me
                   </span>
                 </label>
-                <button
-                  type="button"
+                <Link
+                  to="/forgot-password"
                   className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200"
                 >
                   Forgot password?
-                </button>
+                </Link>
               </motion.div>
 
               <motion.div variants={formItem}>
