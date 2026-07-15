@@ -26,7 +26,11 @@ const UserSchema = new mongoose.Schema({
   profilePic: { type: String, default: '' },
   role: {type: String,enum: ['customer', 'vendor', 'superadmin'], default: 'customer' 
   },
-  isActive: { type: Boolean, default: true }
+  isActive: { type: Boolean, default: true },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: { type: String },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date }
 }, { timestamps: true });
 
 

@@ -11,6 +11,9 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import Home from "./pages/public/Home";
 import Signin from "./pages/public/Signin";
 import Register from "./pages/public/Register";
+import ForgotPassword from "./pages/public/ForgotPassword";
+import ResetPassword from "./pages/public/ResetPassword";
+import VerifyEmail from "./pages/public/VerifyEmail";
 import Products from "./pages/public/Products";
 import ProductDetails from "./pages/public/ProductDetails";
 import Wishlist from "./pages/public/Wishlist";
@@ -54,6 +57,9 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="login" element={<Signin />} />
                 <Route path="register" element={<Register />} />
+                <Route path="forgot-password" element={<ForgotPassword />} />
+                <Route path="reset-password/:token" element={<ResetPassword />} />
+                <Route path="verify-email/:token" element={<VerifyEmail />} />
                 <Route path="products" element={<Products />} />
                 <Route path="product/:id" element={<ProductDetails />} />
                 <Route path="wishlist" element={<Wishlist />} />

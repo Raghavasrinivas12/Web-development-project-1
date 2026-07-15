@@ -236,12 +236,12 @@ export default function Signin() {
                     Remember me
                   </span>
                 </label>
-                <button
-                  type="button"
+                <Link
+                  to="/forgot-password"
                   className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200"
                 >
                   Forgot password?
-                </button>
+                </Link>
               </motion.div>
 
               <motion.div variants={formItem}>

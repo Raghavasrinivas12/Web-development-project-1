@@ -41,6 +41,8 @@ export default function Register() {
     phone: "",
     role: "customer",
   });
+  const [registered, setRegistered] = useState(false);
+  const [error, setError] = useState("");
   console.log("form",form)
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -48,21 +50,37 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     try {
       const res = await axios.post(
         `${API_URL}/api/user/signup`,
         form
       );
       login(res.data.user, res.data.token);
-      const role = res.data.user?.role;
-      if (role === "superadmin") navigate("/admindashboard");
-      else if (role === "vendor") navigate("/vendor/dashboard");
-      else navigate("/");
+      setRegistered(true);
     } catch (err) {
-      console.error(err);
-      alert("Registration Failed");
+      setError(err.response?.data?.msg || "Registration Failed");
     }
   };
+
+  if (registered) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-2">Verify Your Email</h1>
+          <p className="text-slate-400">We sent a verification link to <strong className="text-white">{form.email}</strong>. Please check your inbox and click the link to activate your account.</p>
+          <button onClick={() => navigate("/")} className="mt-8 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition">
+            Continue to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-8">
@@ -204,6 +222,8 @@ export default function Register() {
                   ))}
                 </div>
               </motion.div>
+
+              {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
               <motion.div variants={formItem}>
                 <motion.button
