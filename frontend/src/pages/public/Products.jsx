@@ -188,7 +188,7 @@ export default function Products() {
                         size={16}
                         className={
                           isWishlisted(product._id)
-                            ? "fill-red-500 text-red-500"
+                            ? "fill-blue-500 text-blue-500"
                             : "text-white"
                         }
                       />

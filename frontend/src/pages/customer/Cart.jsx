@@ -29,7 +29,7 @@ export default function Cart() {
           <p className="text-slate-400 mb-6">Add some products to get started</p>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-rose-600/10"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-600/10"
           >
             <ArrowLeft size={18} />
             Browse Products
@@ -46,10 +46,10 @@ export default function Cart() {
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Shopping Cart</h1>
             <p className="text-slate-400 text-sm mt-1">
-              {totalItems} item{totalItems !== 1 ? "s" : ""} · <span className="text-rose-400 font-semibold">₹{totalPrice.toLocaleString('en-IN')}</span>
+              {totalItems} item{totalItems !== 1 ? "s" : ""} · <span className="text-blue-400 font-semibold">₹{totalPrice.toLocaleString('en-IN')}</span>
             </p>
           </div>
-          <button onClick={clearCart} className="text-sm text-red-400 hover:text-red-300 font-medium transition cursor-pointer">
+          <button onClick={clearCart} className="text-sm text-slate-400 hover:text-slate-300 font-medium transition cursor-pointer">
             Clear All
           </button>
         </div>
@@ -65,7 +65,7 @@ export default function Cart() {
                 <Link to={`/product/${item._id}`}>
                   <h3 className="text-white font-semibold truncate hover:text-blue-400 transition">{item.title}</h3>
                 </Link>
-                <p className="text-rose-400 font-bold mt-1">₹{item.price?.toLocaleString('en-IN')}</p>
+                <p className="text-blue-400 font-bold mt-1">₹{item.price?.toLocaleString('en-IN')}</p>
               </div>
 
               <div className="flex items-center gap-3">
@@ -88,7 +88,7 @@ export default function Cart() {
                 ₹{(item.price * item.quantity).toLocaleString('en-IN')}
               </p>
 
-              <button onClick={() => removeItem(item._id)} className="text-slate-500 hover:text-red-400 transition shrink-0 cursor-pointer">
+              <button onClick={() => removeItem(item._id)} className="text-slate-500 hover:text-blue-400 transition shrink-0 cursor-pointer">
                 <Trash2 size={18} />
               </button>
             </div>

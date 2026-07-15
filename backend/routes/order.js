@@ -29,7 +29,6 @@ router.post('/checkout', authMiddleware, async (req, res) => {
         return res.status(400).json({ msg: `Insufficient stock for item: ${product.title}` });
       }
 
-      // Compute total sum securely on the server
       calculatedTotal += product.price * item.quantity;
 
       verifiedItems.push({
