@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import {Settings,Gift,Receipt,Menu,X,ShoppingCart,ChartColumn,User,MessageSquare, Package} from "lucide-react";
+import {Settings,Gift,Receipt,Menu,X,ShoppingCart,ChartColumn,User,MessageSquare, Package, House} from "lucide-react";
 import {  useAuth} from '../context/AuthContext';
 import { useState } from 'react';
 const VendorLayout = () => {
@@ -40,6 +40,10 @@ const VendorLayout = () => {
             ShopHub<span className="text-white text-sm block tracking-normal font-normal opacity-60">Vendor Core</span>
           </div>
           <nav className="space-y-3">
+            <Link to="/" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
+              <House size={20}/>
+              <span>Home</span>
+            </Link>
             <Link to="/vendor/dashboard/profile" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
               <User size={20}/>
               <span>Profile</span>

@@ -24,6 +24,7 @@ import {
   Settings,
   Receipt,
   Bell,
+  LayoutDashboard,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -189,6 +190,26 @@ const Navbar = () => {
                       <User size={16} />
                       My Profile
                     </Link>
+                    {user?.role === "superadmin" && (
+                      <Link
+                        to="/admindashboard"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                      >
+                        <LayoutDashboard size={16} />
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    {user?.role === "vendor" && (
+                      <Link
+                        to="/vendor/dashboard"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                      >
+                        <LayoutDashboard size={16} />
+                        Vendor Dashboard
+                      </Link>
+                    )}
                     <div className="border-t border-slate-800 mt-1 pt-1">
                       <button
                         onClick={handleLogout}
@@ -311,6 +332,16 @@ const Navbar = () => {
               <Link to="/notifications" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
                 <Bell size={18} /> Notifications
               </Link>
+              {user?.role === "superadmin" && (
+                <Link to="/admindashboard" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
+                  <LayoutDashboard size={18} /> Admin Dashboard
+                </Link>
+              )}
+              {user?.role === "vendor" && (
+                <Link to="/vendor/dashboard" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
+                  <LayoutDashboard size={18} /> Vendor Dashboard
+                </Link>
+              )}
               <button
                 onClick={() => { handleLogout(); setIsOpen(false); }}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200"

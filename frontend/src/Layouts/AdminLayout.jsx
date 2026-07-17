@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import {
   LayoutDashboard, Users, Store, Package, ShoppingCart,
-  FolderTree, BarChart3, Settings, LogOut, Menu, X, Bell, UserCircle,
+  FolderTree, BarChart3, Settings, LogOut, Menu, X, Bell, UserCircle, House,
 } from "lucide-react";
 import API_URL from "../config";
 
@@ -41,6 +41,7 @@ const AdminLayout = () => {
     { name: "Reports",    path: "/admin/reports",   icon: <BarChart3 size={20} /> },
     { name: "Notifications", path: "/admin/notifications", icon: <Bell size={20} /> },
     { name: "Settings",   path: "/admin/settings",  icon: <Settings size={20} /> },
+    { name: "Home",       path: "/",                icon: <House size={20} /> },
   ];
 
   return (
