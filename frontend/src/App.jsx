@@ -46,6 +46,7 @@ import VendorSales from "./pages/vendor/VendorSales";
 import VendorProfile from "./pages/vendor/VendorProfile";
 import VendorReviews from "./pages/vendor/VendorReviews";
 import VendorInventory from "./pages/vendor/VendorInventory";
+import AboutVendor from "./pages/vendor/AboutVendor";
 
 function App() {
   return (
@@ -75,6 +76,7 @@ function App() {
                   <Route path="checkout" element={<Checkout />} />
                   <Route path="payment-success" element={<PaymentSuccess />} />
                   <Route path="myorders" element={<MyOrders />} />
+                  <Route path="aboutvendor" element={<AboutVendor />} />
                 </Route>
               </Route>
 
