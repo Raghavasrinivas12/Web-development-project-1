@@ -107,6 +107,7 @@ router.get('/history', authMiddleware, async (req, res) => {
     const userId = req.user.userid;
 
     const orders = await Order.find({ userId })
+      .populate('items.productId', 'images title')
       .sort({ createdAt: -1 }); 
 
     return res.json({
@@ -137,6 +138,7 @@ router.get('/vendor-dashboard', authMiddleware, restrictTo('vendor', 'superadmin
       'items.productId': { $in: productIds }
     })
       .populate('userId', 'username email')
+      .populate('items.productId', 'images title')
       .sort({ createdAt: -1 });
 
     const enrichedOrders = orders.map((order) => {

@@ -68,7 +68,8 @@ router.post('/signup', async (req, res) => {
       phone: user.phone,
       role: user.role,
       profilePic: user.profilePic || '',
-      isVerified: false
+      isVerified: false,
+      address: { street: '', city: '', state: '', zipCode: '', country: '' }
     };
 
     const response = {
@@ -125,7 +126,8 @@ router.post('/signin', async (req, res) => {
       phone: user.phone,
       role: user.role,
       profilePic: user.profilePic || '',
-      isVerified: user.isVerified
+      isVerified: user.isVerified,
+      address: user.address || { street: '', city: '', state: '', zipCode: '', country: '' }
     };
 
     return res.json({
@@ -178,7 +180,8 @@ router.get('/profile', authMiddleware, async (req, res) => {
       phone: user.phone,
       role: user.role,
       profilePic: user.profilePic || '',
-      isVerified: user.isVerified
+      isVerified: user.isVerified,
+      address: user.address || { street: '', city: '', state: '', zipCode: '', country: '' }
     };
 
     return res.json({ user: userData });
@@ -203,6 +206,7 @@ router.put('/profile', authMiddleware, async (req, res) => {
     if (req.body.username) updates.username = req.body.username;
     if (req.body.phone !== undefined) updates.phone = req.body.phone;
     if (req.body.profilePic !== undefined) updates.profilePic = req.body.profilePic;
+    if (req.body.address) updates.address = req.body.address;
 
     const user = await User.findByIdAndUpdate(
       req.user.userid,
@@ -220,7 +224,9 @@ router.put('/profile', authMiddleware, async (req, res) => {
       email: user.email,
       phone: user.phone,
       role: user.role,
-      profilePic: user.profilePic || ''
+      profilePic: user.profilePic || '',
+      isVerified: user.isVerified,
+      address: user.address || { street: '', city: '', state: '', zipCode: '', country: '' }
     };
 
     return res.json({

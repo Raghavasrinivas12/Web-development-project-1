@@ -1,104 +1,126 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import {Settings,Gift,Receipt,Menu,X,ShoppingCart,ChartColumn,User,MessageSquare, Package, House} from "lucide-react";
-import {  useAuth} from '../context/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import {
+  LayoutDashboard, Settings, Menu, X, ShoppingCart, ChartColumn, User,
+  MessageSquare, Package, House, LogOut, Gift, UserCircle, Bell,
+} from "lucide-react";
+
 const VendorLayout = () => {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [sidebarOpen,setSidebarOpen]=useState(false);
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const expanded = sidebarExpanded || sidebarOpen;
+
+  const menuItems = [
+    { name: "Home",         path: "/",                       icon: <House size={20} /> },
+    { name: "Profile",      path: "/vendor/dashboard/profile",  icon: <User size={20} /> },
+    { name: "Overview",     path: "/vendor/dashboard",          icon: <LayoutDashboard size={20} /> },
+    { name: "Products",     path: "/vendor/dashboard/products", icon: <Gift size={20} /> },
+    { name: "Settings",     path: "/vendor/dashboard/settings", icon: <Settings size={20} /> },
+    { name: "Orders",       path: "/vendor/dashboard/orders",   icon: <ShoppingCart size={20} /> },
+    { name: "Sales",        path: "/vendor/dashboard/sales",    icon: <ChartColumn size={20} /> },
+    { name: "Inventory",    path: "/vendor/dashboard/inventory", icon: <Package size={20} /> },
+    { name: "Reviews",      path: "/vendor/dashboard/reviews",  icon: <MessageSquare size={20} /> },
+  ];
 
   return (
-    <div className="flex h-screen bg-slate-950 font-sans relative">
-      {/* Mobile Header */}
+    <div className="min-h-screen bg-slate-950 text-white">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/60 z-10 lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
 
-<div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 flex items-center justify-between px-4 z-50 shadow-lg">
-
-    <button
-        onClick={() => setSidebarOpen(true)}
-    >
-        <Menu size={28} className="text-white hover:text-blue-400" />
-    </button>
-
-    <h1 className="text-xl font-bold text-blue-500">
-        ShopHub
-    </h1>
-
-</div>
-      {/* Fixed Admin Sidebar */}
-      <aside className={`fixed lg:static top-0 left-0 h-full w-64 bg-slate-900 text-white flex flex-col justify-between p-6 shadow-xl z-50 transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" :"-translate-x-full"} lg:translate-x-0`}>
-        <div>
-          <div className="flex justify-end lg:hidden mb-4">
-
-    <button
-        onClick={() => setSidebarOpen(false)}
-    >
-        <X size={28} className='text-white  hover:text-blue-400'/>
-    </button>
-
-</div>
-          <div className="text-2xl font-bold tracking-wider text-blue-500 mb-8 border-b border-slate-700 pb-4">
-            ShopHub<span className="text-white text-sm block tracking-normal font-normal opacity-60">Vendor Core</span>
-          </div>
-          <nav className="space-y-3">
-            <Link to="/" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-              <House size={20}/>
-              <span>Home</span>
-            </Link>
-            <Link to="/vendor/dashboard/profile" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-              <User size={20}/>
-              <span>Profile</span>
-            </Link>
-            <Link to="/vendor/dashboard" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-              <Receipt/>
-               Overview Console
-            </Link>
-            <Link to="/vendor/dashboard/products" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-              <Gift size={20}/>
-               Manage Products
-            </Link>
-            <Link to="/vendor/dashboard/settings" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-            
-              <Settings size={20}/>
-              <span>Store Settings</span>
-              
-            </Link>
-            <Link to="/vendor/dashboard/orders" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-            
-              <ShoppingCart size={20}/>
-              <span>Manage Orders</span>
-              
-            </Link>
-             <Link to="/vendor/dashboard/sales" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-            
-              <ChartColumn size={20}/>
-              <span>Manage Sales</span>
-              
-            </Link>
-            <Link to="/vendor/dashboard/inventory" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-            
-              <Package size={20}/>
-              <span>Manage Inventory</span>
-              
-            </Link>
-            <Link to="/vendor/dashboard/reviews" className="flex items-center gap-2 block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-800 hover:text-blue-400">
-              <MessageSquare size={20}/>
-              <span>Reviews</span>
-            </Link>
-            
-          </nav>
+      {/* Top Bar */}
+      <header className="fixed top-0 left-0 right-0 z-30 h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 sm:px-6">
+        <div className="flex items-center gap-3">
+          <button className="lg:hidden hover:text-blue-400" onClick={() => setSidebarOpen(true)}>
+            <Menu size={20} />
+          </button>
+          <Link to="/vendor/dashboard" className="flex items-center gap-2 hover:text-blue-400 transition">
+            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center font-bold text-white text-sm">SH</div>
+            <span className="font-bold text-lg hidden sm:inline">Shop<span className="text-blue-500">Hub</span> <span className="text-slate-400 font-normal text-sm">Vendor</span></span>
+          </Link>
         </div>
-        <button 
-          onClick={() => { logout(); navigate('/login'); }} 
-          className="w-full bg-blue-600 hover:bg-blue-700 py-2.5 px-4 rounded font-semibold text-sm transition-colors duration-200"
-        >
-          Exit Dashboard
+      </header>
+
+      {/* Sidebar */}
+      <aside
+        onMouseEnter={() => setSidebarExpanded(true)}
+        onMouseLeave={() => setSidebarExpanded(false)}
+        className={`fixed top-14 left-0 z-20 h-[calc(100vh-3.5rem)] ${expanded ? "w-64" : "w-16"}
+          bg-slate-900 border-r border-slate-800 transition-all duration-200 overflow-hidden
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+      >
+        <button className="lg:hidden absolute top-2 right-2 hover:text-blue-500 z-50" onClick={() => setSidebarOpen(false)}>
+          <X size={20} />
         </button>
+
+        {/* Profile */}
+        <div className="flex items-center h-16 border-b border-slate-800 px-3">
+          <button
+            onClick={() => navigate("/vendor/dashboard/profile")}
+            className={`flex items-center gap-3 hover:text-blue-400 transition truncate ${expanded ? "" : "mx-auto"}`}
+          >
+            {user?.profilePic ? (
+              <img src={user.profilePic} alt="" className="w-10 h-10 rounded-full object-cover border-2 border-blue-500 shrink-0" />
+            ) : (
+              <UserCircle size={32} className="text-blue-500 shrink-0" />
+            )}
+            {expanded && (
+              <div className="text-left truncate min-w-0">
+                <p className="text-base font-medium leading-tight truncate">{user?.username || "Vendor"}</p>
+                <p className="text-xs text-slate-400 leading-tight truncate">{user?.email || ""}</p>
+              </div>
+            )}
+          </button>
+        </div>
+
+        {/* Menu */}
+        <nav className="p-2 space-y-0.5 mt-1">
+          {menuItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition whitespace-nowrap
+                ${location.pathname === item.path
+                  ? "bg-blue-500 text-white"
+                  : "hover:bg-slate-800 text-slate-300"
+                }`}
+              title={!expanded ? item.name : undefined}
+            >
+              <span className="shrink-0 flex items-center justify-center w-5">{item.icon}</span>
+              <span className={`text-sm transition-opacity duration-200 ${expanded ? "opacity-100" : "opacity-0"}`}>
+                {item.name}
+              </span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* Logout */}
+        <div className="absolute bottom-4 left-0 w-full px-2">
+          <button
+            onClick={() => { logout(); navigate("/login"); }}
+            className={`w-full flex items-center justify-center bg-slate-700 hover:bg-slate-600 py-2.5 rounded-lg transition ${expanded ? "gap-2" : "gap-0"}`}
+            title={!expanded ? "Logout" : undefined}
+          >
+            <LogOut size={18} className="shrink-0" />
+            {expanded && (
+              <span className="text-sm">Logout</span>
+            )}
+          </button>
+        </div>
       </aside>
 
-      {/* Dynamic Content Frame */}
-      <main className="flex-1 overflow-y-auto p-10">
-        <Outlet />
-      </main>
+      {/* Main Content */}
+      <div className={`pt-14 transition-all duration-200 min-h-screen ${sidebarExpanded ? "lg:ml-64" : "lg:ml-16"} ml-0`}>
+        <main className="p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

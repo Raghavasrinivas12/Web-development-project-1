@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Folder, Search, Plus, Edit, Trash2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Folder, Search, Plus, Edit, Trash2, Upload } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -9,8 +9,9 @@ const ManageCategories = () => {
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [editPreviewImage, setEditPreviewImage] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const addFileRef = useRef(null);
+  const editFileRef = useRef(null);
   const [newCategory, setNewCategory] = useState({ image: "", name: "", isActive: true });
   const [editCategory, setEditCategory] = useState({ _id: "", image: "", name: "", isActive: true });
 
@@ -26,17 +27,34 @@ const ManageCategories = () => {
 
   useEffect(() => { fetchCategories() }, []);
 
+  const uploadImage = async (file, cb) => {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("image", file);
+      fd.append("folder", "shophub/categories");
+      const res = await axios.post("/api/upload/single", fd, {
+        headers: { Authorization: `Bearer ${token()}`, "Content-Type": "multipart/form-data" },
+      });
+      cb(res.data.url);
+    } catch {
+      toast.error("Image upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const addCategory = () => {
     if (!newCategory.name.trim()) return;
     axios.post("/api/admin/categories", newCategory, headers())
-      .then(() => { fetchCategories(); setShowAddModal(false); setPreviewImage(""); toast.success("Category added"); })
+      .then(() => { fetchCategories(); setShowAddModal(false); toast.success("Category added"); })
       .catch((err) => toast.error(err.response?.data?.msg || "Failed to add category"));
     setNewCategory({ image: "", name: "", isActive: true });
   };
 
   const updateCategory = () => {
     axios.put(`/api/admin/categories/${editCategory._id}`, editCategory, headers())
-      .then(() => { fetchCategories(); setShowEditModal(false); setEditPreviewImage(""); toast.success("Category updated"); })
+      .then(() => { fetchCategories(); setShowEditModal(false); toast.success("Category updated"); })
       .catch((err) => toast.error(err.response?.data?.msg || "Failed to update category"));
   };
 
@@ -83,16 +101,22 @@ const ManageCategories = () => {
             <h2 className="text-xl font-semibold mb-5">Add Category</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm mb-2">Category Image URL</label>
-                <input type="text" placeholder="Paste image URL" value={newCategory.image}
-                  onChange={(e) => { setNewCategory({ ...newCategory, image: e.target.value }); setPreviewImage(e.target.value); }}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-sm outline-none" />
+                <label className="block text-sm mb-2">Category Image</label>
+                {newCategory.image ? (
+                  <div className="relative inline-block">
+                    <img src={newCategory.image} alt="Preview" className="w-24 h-24 rounded-lg object-cover border border-slate-700" />
+                    <button onClick={() => setNewCategory({ ...newCategory, image: "" })}
+                      className="absolute -top-2 -right-2 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs">&times;</button>
+                  </div>
+                ) : (
+                  <label className="border-2 border-dashed border-slate-700 rounded-lg p-4 text-center hover:border-blue-500 transition cursor-pointer block bg-slate-800/30">
+                    <input ref={addFileRef} type="file" accept="image/*" className="hidden"
+                      onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f, (url) => setNewCategory({ ...newCategory, image: url })); }} />
+                    <Upload size={20} className="text-blue-400 mx-auto mb-1" />
+                    <p className="text-blue-400 text-sm font-medium">{uploading ? "Uploading..." : "Click to Upload"}</p>
+                  </label>
+                )}
               </div>
-              {previewImage && (
-                <div className="flex justify-center">
-                  <img src={previewImage} alt="Preview" className="w-24 h-24 rounded-lg object-cover border border-slate-700" />
-                </div>
-              )}
               <input type="text" placeholder="Category Name" value={newCategory.name}
                 onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
                 className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-sm outline-none" />
@@ -103,7 +127,7 @@ const ManageCategories = () => {
               </select>
             </div>
             <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => { setShowAddModal(false); setPreviewImage(""); }} className="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg text-sm">Cancel</button>
+              <button onClick={() => { setShowAddModal(false); }} className="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg text-sm">Cancel</button>
               <button onClick={addCategory} className="bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-lg text-sm">Add Category</button>
             </div>
           </div>
@@ -140,7 +164,7 @@ const ManageCategories = () => {
                 <td className="p-4">{new Date(cat.createdAt).toLocaleDateString()}</td>
                 <td className="p-4">
                   <div className="flex justify-center gap-3">
-                    <button onClick={() => { setEditCategory(cat); setEditPreviewImage(cat.image); setShowEditModal(true); }}
+                    <button onClick={() => { setEditCategory(cat); setShowEditModal(true); }}
                       className="bg-blue-500 hover:bg-blue-600 p-2 rounded-lg"><Edit size={18} /></button>
                     <button onClick={() => deleteCategory(cat._id)} className="bg-slate-500 hover:bg-slate-600 p-2 rounded-lg"><Trash2 size={18} /></button>
                   </div>
@@ -162,7 +186,7 @@ const ManageCategories = () => {
               {cat.isActive ? "Active" : "Inactive"}
             </span>
             <div className="flex justify-end gap-3 mt-5">
-              <button onClick={() => { setEditCategory(cat); setEditPreviewImage(cat.image); setShowEditModal(true); }}
+              <button onClick={() => { setEditCategory(cat); setShowEditModal(true); }}
                 className="bg-blue-500 hover:bg-blue-600 p-2 rounded-lg"><Edit size={18} /></button>
               <button onClick={() => deleteCategory(cat._id)} className="bg-slate-500 hover:bg-slate-600 p-2 rounded-lg"><Trash2 size={18} /></button>
             </div>
@@ -176,16 +200,22 @@ const ManageCategories = () => {
             <h2 className="text-xl font-semibold mb-5">Edit Category</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm mb-2">Category Image URL</label>
-                <input type="text" placeholder="Paste image URL" value={editCategory.image}
-                  onChange={(e) => { setEditCategory({ ...editCategory, image: e.target.value }); setEditPreviewImage(e.target.value); }}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-sm outline-none" />
+                <label className="block text-sm mb-2">Category Image</label>
+                {editCategory.image ? (
+                  <div className="relative inline-block">
+                    <img src={editCategory.image} alt="Preview" className="w-24 h-24 rounded-lg object-cover border border-slate-700" />
+                    <button onClick={() => setEditCategory({ ...editCategory, image: "" })}
+                      className="absolute -top-2 -right-2 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs">&times;</button>
+                  </div>
+                ) : (
+                  <label className="border-2 border-dashed border-slate-700 rounded-lg p-4 text-center hover:border-blue-500 transition cursor-pointer block bg-slate-800/30">
+                    <input ref={editFileRef} type="file" accept="image/*" className="hidden"
+                      onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f, (url) => setEditCategory({ ...editCategory, image: url })); }} />
+                    <Upload size={20} className="text-blue-400 mx-auto mb-1" />
+                    <p className="text-blue-400 text-sm font-medium">{uploading ? "Uploading..." : "Click to Upload"}</p>
+                  </label>
+                )}
               </div>
-              {editPreviewImage && (
-                <div className="flex justify-center">
-                  <img src={editPreviewImage} alt="Preview" className="w-24 h-24 rounded-lg object-cover border border-slate-700" />
-                </div>
-              )}
               <input type="text" placeholder="Category Name" value={editCategory.name}
                 onChange={(e) => setEditCategory({ ...editCategory, name: e.target.value })}
                 className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-sm outline-none" />
@@ -196,7 +226,7 @@ const ManageCategories = () => {
               </select>
             </div>
             <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => { setShowEditModal(false); setEditPreviewImage(""); }} className="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg text-sm">Cancel</button>
+              <button onClick={() => { setShowEditModal(false); }} className="bg-slate-700 hover:bg-slate-600 px-5 py-2 rounded-lg text-sm">Cancel</button>
               <button onClick={updateCategory} className="bg-blue-500 hover:bg-blue-600 px-5 py-2 rounded-lg text-sm">Save Changes</button>
             </div>
           </div>
