@@ -58,7 +58,14 @@ const orderCheck = z.object({
 const profileUpdateCheck = z.object({
   username: z.string().min(3, "Username must be at least 3 characters").max(50).optional(),
   phone: z.string().optional(),
-  profilePic: z.string().optional()
+  profilePic: z.string().optional(),
+  address: z.object({
+    street: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    zipCode: z.string().optional(),
+    country: z.string().optional()
+  }).optional()
 });
 
 module.exports = {

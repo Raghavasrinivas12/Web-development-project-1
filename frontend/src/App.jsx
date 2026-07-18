@@ -18,6 +18,7 @@ import Products from "./pages/public/Products";
 import ProductDetails from "./pages/public/ProductDetails";
 import Wishlist from "./pages/public/Wishlist";
 import SearchFilter from "./pages/public/SearchFilter";
+import StoreDetail from "./pages/public/StoreDetail";
 
 import Profile from "./pages/user/Profile";
 import Notifications from "./pages/user/Notifications";
@@ -64,6 +65,7 @@ function App() {
                 <Route path="verify-email/:token" element={<VerifyEmail />} />
                 <Route path="products" element={<Products />} />
                 <Route path="product/:id" element={<ProductDetails />} />
+                <Route path="store/:id" element={<StoreDetail />} />
                 <Route path="wishlist" element={<Wishlist />} />
                 <Route path="search" element={<SearchFilter />} />
               </Route>

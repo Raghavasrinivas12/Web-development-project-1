@@ -43,7 +43,7 @@ async function seed() {
       { name: "Furniture", image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85" },
       { name: "Books", image: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da" },
       { name: "Grocery", image: "https://images.unsplash.com/photo-1542838132-92c53300491e" },
-      { name: "Accessories", image: "https://images.unsplash.com/photo-1601924994987-69e8d56d0db2" },
+      { name: "Accessories", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600" },
     ]);
     console.log(`  ✓ ${categories.length} categories inserted`);
 

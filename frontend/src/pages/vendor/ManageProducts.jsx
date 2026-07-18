@@ -24,7 +24,7 @@ const ManageProducts = () => {
 
   const [form, setForm] = useState({
     title: "", category: "", brand: "", price: "", discount: "",
-    stock: "", status: "Active", variants: "", description: "", image: "",
+    stock: "", status: "Active", variants: "", description: "", images: [],
   });
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const ManageProducts = () => {
 
   const resetForm = () => {
     setForm({ title: "", category: "", brand: "", price: "", discount: "",
-      stock: "", status: "Active", variants: "", description: "", image: "" });
+      stock: "", status: "Active", variants: "", description: "", images: [] });
     setEditingProduct(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -62,7 +62,7 @@ const ManageProducts = () => {
       status: product.stockQuantity === 0 ? "Out of Stock" : "Active",
       variants: (product.variants || []).join(","),
       description: product.description || "",
-      image: product.images?.[0] || "",
+      images: product.images || [],
     });
     setEditingProduct(product);
     setShowModal(true);
@@ -71,22 +71,28 @@ const ManageProducts = () => {
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
     setUploading(true);
     try {
       const fd = new FormData();
-      fd.append("image", file);
+      files.forEach((f) => fd.append("images", f));
+      fd.append("folder", "shophub/products");
       const res = await axios.post(`${API}/api/upload`, fd, {
         headers: { ...headers, "Content-Type": "multipart/form-data" },
       });
-      setForm((p) => ({ ...p, image: res.data.url }));
-      toast.success("Image uploaded");
+      setForm((p) => ({ ...p, images: [...p.images, ...res.data.urls] }));
+      toast.success(`${res.data.urls.length} image(s) uploaded`);
     } catch {
       toast.error("Upload failed");
     } finally {
       setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  };
+
+  const removeImage = (index) => {
+    setForm((p) => ({ ...p, images: p.images.filter((_, i) => i !== index) }));
   };
 
   const handleSave = async () => {
@@ -101,7 +107,7 @@ const ManageProducts = () => {
       price: Number(form.price),
       stockQuantity: Number(form.stock),
       category: form.category || undefined,
-      images: form.image ? [form.image] : [],
+      images: form.images.length ? form.images : [],
       variants: form.variants ? form.variants.split(",").map((v) => v.trim()).filter(Boolean) : [],
     };
     try {
@@ -318,21 +324,22 @@ const ManageProducts = () => {
                     className="w-full mt-2 bg-slate-800 rounded-lg px-4 py-3 text-white border border-slate-700 focus:border-blue-500 outline-none" />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="text-sm text-slate-400 block mb-2">Product Image</label>
-                  {form.image ? (
-                    <div className="relative inline-block">
-                      <img src={form.image} alt="Preview" className="w-40 h-40 object-cover rounded-xl border border-slate-700" />
-                      <button onClick={() => setForm((p) => ({ ...p, image: "" }))}
-                        className="absolute -top-2 -right-2 bg-red-500 rounded-full w-6 h-6 flex items-center justify-center text-white text-xs">&times;</button>
-                    </div>
-                  ) : (
-                    <label className="border-2 border-dashed border-slate-700 rounded-xl p-6 text-center hover:border-blue-500 transition cursor-pointer block bg-slate-800/30">
-                      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                      <Upload size={24} className="text-blue-400 mx-auto mb-2" />
-                      <p className="text-blue-400 font-medium">{uploading ? "Uploading..." : "Click to Upload"}</p>
-                      <p className="text-xs text-slate-500 mt-1">PNG, JPG up to 10MB</p>
-                    </label>
-                  )}
+                  <label className="text-sm text-slate-400 block mb-2">Product Images</label>
+                  <div className="flex flex-wrap gap-3 mb-3">
+                    {form.images.map((img, i) => (
+                      <div key={i} className="relative">
+                        <img src={img} alt="" className="w-24 h-24 object-cover rounded-lg border border-slate-700" />
+                        <button onClick={() => removeImage(i)}
+                          className="absolute -top-2 -right-2 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-white text-xs">&times;</button>
+                      </div>
+                    ))}
+                  </div>
+                  <label className="border-2 border-dashed border-slate-700 rounded-xl p-4 text-center hover:border-blue-500 transition cursor-pointer block bg-slate-800/30">
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} multiple className="hidden" />
+                    <Upload size={22} className="text-blue-400 mx-auto mb-1" />
+                    <p className="text-blue-400 font-medium text-sm">{uploading ? "Uploading..." : "Click to Upload Images"}</p>
+                    <p className="text-xs text-slate-500 mt-1">PNG, JPG up to 10MB each</p>
+                  </label>
                 </div>
               </div>
             </div>

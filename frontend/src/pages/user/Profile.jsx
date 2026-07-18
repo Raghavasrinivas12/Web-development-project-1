@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Camera } from "lucide-react";
+import { Camera, MapPin } from "lucide-react";
 import axios from "axios";
 import API_URL from "../../config";
 
@@ -10,7 +10,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({ username: "", phone: "", profilePic: "" });
+  const [form, setForm] = useState({ username: "", phone: "", profilePic: "", address: { street: "", city: "", state: "", zipCode: "", country: "India" } });
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -29,7 +29,12 @@ export default function Profile() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const u = res.data.user;
-      setForm({ username: u.username, phone: u.phone || "", profilePic: u.profilePic || "" });
+      setForm({
+        username: u.username,
+        phone: u.phone || "",
+        profilePic: u.profilePic || "",
+        address: u.address || { street: "", city: "", state: "", zipCode: "", country: "India" },
+      });
       updateUser(u);
     } catch {
       logout();
@@ -41,6 +46,13 @@ export default function Profile() {
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleAddressChange = (e) => {
+    setForm((prev) => ({
+      ...prev,
+      address: { ...prev.address, [e.target.name]: e.target.value },
+    }));
   };
 
   const handleFileSelect = async (e) => {
@@ -84,6 +96,7 @@ export default function Profile() {
         username: user.username,
         phone: user.phone || "",
         profilePic: user.profilePic || "",
+        address: user.address || { street: "", city: "", state: "", zipCode: "", country: "India" },
       });
     }
     setEditing(false);
@@ -179,6 +192,88 @@ export default function Profile() {
             ) : (
               <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.phone || "—"}</p>
             )}
+          </div>
+
+          <div className="border-t border-slate-800 pt-4">
+            <h3 className="flex items-center gap-2 text-sm font-medium text-slate-300 mb-3">
+              <MapPin size={16} /> Location
+            </h3>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Street</label>
+                {editing ? (
+                  <input
+                    type="text"
+                    name="street"
+                    value={form.address.street}
+                    onChange={handleAddressChange}
+                    className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
+                  />
+                ) : (
+                  <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.address?.street || "—"}</p>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">City</label>
+                  {editing ? (
+                    <input
+                      type="text"
+                      name="city"
+                      value={form.address.city}
+                      onChange={handleAddressChange}
+                      className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
+                    />
+                  ) : (
+                    <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.address?.city || "—"}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">State</label>
+                  {editing ? (
+                    <input
+                      type="text"
+                      name="state"
+                      value={form.address.state}
+                      onChange={handleAddressChange}
+                      className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
+                    />
+                  ) : (
+                    <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.address?.state || "—"}</p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">ZIP Code</label>
+                  {editing ? (
+                    <input
+                      type="text"
+                      name="zipCode"
+                      value={form.address.zipCode}
+                      onChange={handleAddressChange}
+                      className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
+                    />
+                  ) : (
+                    <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.address?.zipCode || "—"}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1">Country</label>
+                  {editing ? (
+                    <input
+                      type="text"
+                      name="country"
+                      value={form.address.country}
+                      onChange={handleAddressChange}
+                      className="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-200"
+                    />
+                  ) : (
+                    <p className="text-white px-4 py-2.5 bg-slate-800/30 rounded-xl">{user?.address?.country || "—"}</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="pt-4 flex gap-3">

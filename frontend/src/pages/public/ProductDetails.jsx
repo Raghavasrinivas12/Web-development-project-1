@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Star, Heart, ShoppingCart, Plus, Minus, Truck, Tag, User } from "lucide-react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { Star, Heart, ShoppingCart, Plus, Minus, Truck, Tag, User, Store } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
@@ -159,6 +159,12 @@ const ProductDetails = () => {
               )}
             </div>
             {product.category && <p className="text-sm text-slate-500 mt-2">Category: {product.category}</p>}
+            {product.storeId && (
+              <Link to={`/store/${product.storeId._id}`} className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 mt-2 transition">
+                <Store size={16} />
+                <span>{product.storeId.storeName || "Vendor Store"}</span>
+              </Link>
+            )}
             {product.stockQuantity > 0 ? (
               <p className="text-sm text-green-400 mt-1">{product.stockQuantity} in stock</p>
             ) : (
