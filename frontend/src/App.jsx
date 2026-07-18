@@ -19,6 +19,7 @@ import ProductDetails from "./pages/public/ProductDetails";
 import Wishlist from "./pages/public/Wishlist";
 import SearchFilter from "./pages/public/SearchFilter";
 import StoreDetail from "./pages/public/StoreDetail";
+import About from "./Components/About";
 
 import Profile from "./pages/user/Profile";
 import Notifications from "./pages/user/Notifications";
@@ -48,6 +49,7 @@ import VendorProfile from "./pages/vendor/VendorProfile";
 import VendorReviews from "./pages/vendor/VendorReviews";
 import VendorInventory from "./pages/vendor/VendorInventory";
 import AboutVendor from "./pages/vendor/AboutVendor";
+import HelpCenter from "./Components/HelpCenter";
 
 function App() {
   return (
@@ -68,6 +70,9 @@ function App() {
                 <Route path="store/:id" element={<StoreDetail />} />
                 <Route path="wishlist" element={<Wishlist />} />
                 <Route path="search" element={<SearchFilter />} />
+                <Route path="about" element={<About />} />
+                <Route path="help-center" element={<HelpCenter />} />
+
               </Route>
 
               <Route element={<ProtectedRoute allowedRoles={["customer", "superadmin", "vendor"]} />}>
