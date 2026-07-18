@@ -254,11 +254,11 @@ const Navbar = () => {
         <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setIsOpen(false)} />
       )}
 
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-slate-900 text-white z-50 transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
+     <div
+  className={`fixed top-0 left-0 h-screen w-64 bg-slate-900 text-white z-50 transition-transform duration-300 flex flex-col ${
+    isOpen ? "translate-x-0" : "-translate-x-full"
+  }`}
+>
         <div className="flex items-center justify-between p-4 border-b border-slate-800">
           <h2 className="text-xl font-bold">
             Shop<span className="text-blue-500">Hub</span>
@@ -267,24 +267,32 @@ const Navbar = () => {
         </div>
 
         {isAuthenticated && (
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800">
-            {user?.profilePic ? (
-              <img src={user.profilePic} alt="" className="w-9 h-9 rounded-full object-cover" />
-            ) : (
-              <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-sm font-bold text-white">
-                {user?.username?.charAt(0)?.toUpperCase() || "U"}
-              </div>
-            )}
-            <div className="text-sm">
-              <p className="text-white font-medium truncate">{user?.username}</p>
-              <p className="text-slate-400 truncate">{user?.email}</p>
-            </div>
-          </div>
-        )}
+  <div className="flex items-center gap-4 px-5 py-5 border-b border-slate-800">
+    {user?.profilePic ? (
+      <img
+        src={user.profilePic}
+        alt="Profile"
+        className="w-16 h-16 rounded-full object-cover border-2 border-blue-500 shadow-lg"
+      />
+    ) : (
+      <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-2xl font-bold text-white border-2 border-blue-500 shadow-lg">
+        {user?.username?.charAt(0)?.toUpperCase() || "U"}
+      </div>
+    )}
+
+    <div className="flex-1 min-w-0">
+      <h3 className="text-lg font-semibold text-white truncate">
+        {user?.username}
+      </h3>
+
+      
+    </div>
+  </div>
+)}
 
         
 
-        <div className="flex flex-col p-4 gap-4 text-sm">
+        <div className="flex-1 overflow-y-auto p-4 space-y-2 text-sm pb-10">
           <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
             <House size={18} /> Home
           </Link>
