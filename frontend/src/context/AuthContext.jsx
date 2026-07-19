@@ -10,6 +10,13 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.exp * 1000 < Date.now()) {
+          logout();
+          return;
+        }
+      } catch {}
       const stored = localStorage.getItem("user");
       if (stored) {
         try {

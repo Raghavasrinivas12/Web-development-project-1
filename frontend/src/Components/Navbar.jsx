@@ -41,8 +41,7 @@ const categories = [
 ];
 
 const Navbar = () => {
-  const { user, isAuthenticated, logout } = useAuth();
-  const { totalItems } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();  const { totalItems } = useCart();
   const { items: wishlistItems } = useWishlist();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -63,8 +62,17 @@ const Navbar = () => {
 
   useEffect(() => {
     if (!isAuthenticated) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.exp * 1000 < Date.now()) {
+        logout();
+        return;
+      }
+    } catch {}
     axios.get(`${API_URL}/api/notifications`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      headers: { Authorization: `Bearer ${token}` }
     }).then(res => setNotifCount(res.data.unreadCount)).catch(() => {});
   }, [isAuthenticated]);
 

@@ -32,6 +32,7 @@ const AdminLayout = () => {
   };
 
   const menuItems = [
+    { name: "Home",       path: "/",                icon: <House size={20} /> },
     { name: "Dashboard",  path: "/admindashboard", icon: <LayoutDashboard size={20} /> },
     { name: "Users",      path: "/adminusers",      icon: <Users size={20} /> },
     { name: "Vendors",    path: "/adminvendors",    icon: <Store size={20} /> },
@@ -41,7 +42,6 @@ const AdminLayout = () => {
     { name: "Reports",    path: "/admin/reports",   icon: <BarChart3 size={20} /> },
     { name: "Notifications", path: "/admin/notifications", icon: <Bell size={20} /> },
     { name: "Settings",   path: "/admin/settings",  icon: <Settings size={20} /> },
-    { name: "Home",       path: "/",                icon: <House size={20} /> },
   ];
 
   return (
