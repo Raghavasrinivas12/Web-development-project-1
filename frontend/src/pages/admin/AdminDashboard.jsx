@@ -54,9 +54,6 @@ const AdminDashboard = () => {
           <h1 className="text-3xl font-bold text-white">Dashboard</h1>
           <p className="text-slate-400 mt-1">Welcome back, Admin</p>
         </div>
-        <button className="bg-blue-500 hover:bg-blue-600 px-5 py-2.5 rounded-lg text-sm font-medium">
-          Generate Report
-        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
