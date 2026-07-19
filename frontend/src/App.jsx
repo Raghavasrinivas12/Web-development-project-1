@@ -50,6 +50,8 @@ import VendorReviews from "./pages/vendor/VendorReviews";
 import VendorInventory from "./pages/vendor/VendorInventory";
 import AboutVendor from "./pages/vendor/AboutVendor";
 import HelpCenter from "./Components/HelpCenter";
+import Policies from "./Components/Policies"
+
 
 function App() {
   return (
@@ -72,6 +74,8 @@ function App() {
                 <Route path="search" element={<SearchFilter />} />
                 <Route path="about" element={<About />} />
                 <Route path="help-center" element={<HelpCenter />} />
+                <Route path="policies" element={<Policies />} />
+               
 
               </Route>
 

@@ -359,10 +359,10 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+              <Link to="/login" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
                 <LogIn size={18} /> Login
               </Link>
-              <Link to="/register" onClick={() => setIsOpen(false)} className="flex items-center gap-3 hover:text-blue-500">
+              <Link to="/register" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-blue-500 transition-all duration-200">
                 <UserPlus size={18} /> Register
               </Link>
             </>
