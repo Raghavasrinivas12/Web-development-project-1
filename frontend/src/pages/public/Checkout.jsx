@@ -9,7 +9,8 @@ import axios from "axios";
 import * as LocationService from "../../services/LocationService";
 import API_URL from "../../config";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '';
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 const initialAddress = {
   street: "",
