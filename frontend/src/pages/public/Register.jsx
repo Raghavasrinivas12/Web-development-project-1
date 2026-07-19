@@ -43,17 +43,19 @@ export default function Register() {
     phone: "",
     role: "customer",
   });
+  const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(false);
   const [devUrl, setDevUrl] = useState("");
   const [error, setError] = useState("");
-  console.log("form",form)
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
+    setLoading(true);
     try {
       const res = await axios.post(
         `${API_URL}/api/user/signup`,
@@ -64,6 +66,8 @@ export default function Register() {
       setRegistered(true);
     } catch (err) {
       setError(err.response?.data?.msg || "Registration Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -240,14 +244,17 @@ export default function Register() {
               <motion.div variants={formItem}>
                 <motion.button
                   type="submit"
+                  disabled={loading}
                   whileHover={{
                     scale: 1.01,
                     boxShadow: "0 8px 30px rgba(59, 130, 246, 0.25)",
                   }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-black/30 cursor-pointer transition-colors duration-200"
+                  className={`w-full py-3 px-6 font-semibold rounded-xl shadow-lg shadow-black/30 cursor-pointer transition-colors duration-200 ${
+                    loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white"
+                  }`}
                 >
-                  Create Account
+                  {loading ? "Creating Account..." : "Create Account"}
                 </motion.button>
               </motion.div>
             </form>

@@ -10,16 +10,21 @@ const ForgotPassword = () => {
   const [sent, setSent] = useState(false);
   const [devUrl, setDevUrl] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
+    setLoading(true);
     try {
       const res = await axios.post(`${API_URL}/api/user/forgot-password`, { email });
       if (res.data.devUrl) setDevUrl(res.data.devUrl);
       setSent(true);
-    } catch {
-      setError("Something went wrong. Try again.");
+    } catch (err) {
+      setError(err.response?.data?.msg || "Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,8 +70,8 @@ const ForgotPassword = () => {
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
 
-          <button type="submit" className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition">
-            Send Reset Link
+          <button type="submit" disabled={loading} className={`w-full py-3 font-semibold rounded-xl transition ${loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600 text-white"}`}>
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
       </motion.div>
