@@ -66,7 +66,7 @@ const Footer = () => {
 
               <li>
                 <Link
-                  to="/refund-policy"
+                  to="policies"
                   className="hover:text-blue-500 transition duration-300"
                 >
                   Refund Policy
@@ -113,7 +113,7 @@ const Footer = () => {
 
               <li>
                 <Link
-                  to="/terms"
+                  to="policies"
                   className="hover:text-blue-500 transition duration-300"
                 >
                   Terms & Conditions
@@ -122,7 +122,7 @@ const Footer = () => {
 
               <li>
                 <Link
-                  to="/privacy-policy"
+                  to="policies"
                   className="hover:text-blue-500 transition duration-300"
                 >
                   Privacy Policy
@@ -138,11 +138,11 @@ const Footer = () => {
               Contact Us
             </h3>
 
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-400 text-sm hover:text-blue-500">
               support@shophub.com
             </p>
 
-            <p className="text-slate-400 mt-3 text-sm">
+            <p className="text-slate-400 mt-3 text-sm hover:text-blue-500">
               +91 98765 43210
             </p>
 
